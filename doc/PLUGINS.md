@@ -4,7 +4,10 @@
 Causes the conversion stream to halt when multiple dataset items have the same filename
 
 #### Domain(s):
-
+- **Image Object-Detection Domain**
+- **Speech Domain**
+- **Image Classification Domain**
+- **Image Segmentation Domain**
 
 #### Options:
 ```
@@ -15,7 +18,7 @@ usage: check-duplicate-filenames
 Converts all annotation bounds into box regions
 
 #### Domain(s):
-
+- **Image Object-Detection Domain**
 
 #### Options:
 ```
@@ -26,7 +29,7 @@ usage: coerce-box
 Converts all annotation bounds into polygon regions
 
 #### Domain(s):
-
+- **Image Object-Detection Domain**
 
 #### Options:
 ```
@@ -37,7 +40,9 @@ usage: coerce-mask
 Converts images from one format to another
 
 #### Domain(s):
-
+- **Image Object-Detection Domain**
+- **Image Classification Domain**
+- **Image Segmentation Domain**
 
 #### Options:
 ```
@@ -52,7 +57,7 @@ optional arguments:
 Removes annotations which fall outside certain size constraints
 
 #### Domain(s):
-
+- **Image Object-Detection Domain**
 
 #### Options:
 ```
@@ -75,7 +80,10 @@ optional arguments:
 Discards negative examples (those without annotations) from the stream
 
 #### Domain(s):
-
+- **Image Object-Detection Domain**
+- **Speech Domain**
+- **Image Classification Domain**
+- **Image Segmentation Domain**
 
 #### Options:
 ```
@@ -86,7 +94,7 @@ usage: discard-negatives
 Filters detected objects down to those with specified labels.
 
 #### Domain(s):
-
+- **Image Object-Detection Domain**
 
 #### Options:
 ```
@@ -103,7 +111,7 @@ optional arguments:
 Maps object-detection labels from one set to another
 
 #### Domain(s):
-
+- **Image Object-Detection Domain**
 
 #### Options:
 ```
@@ -118,7 +126,7 @@ optional arguments:
 Converts image object-detection instances into image segmentation instances
 
 #### Domain(s):
-
+- **Image Object-Detection Domain**
 
 #### Options:
 ```
@@ -134,7 +142,10 @@ optional arguments:
 Dummy ISP which has no effect on the conversion stream
 
 #### Domain(s):
-
+- **Image Object-Detection Domain**
+- **Speech Domain**
+- **Image Classification Domain**
+- **Image Segmentation Domain**
 
 #### Options:
 ```
@@ -145,7 +156,8 @@ usage: passthrough
 Removes classes from classification/image-segmentation instances
 
 #### Domain(s):
-
+- **Image Segmentation Domain**
+- **Image Classification Domain**
 
 #### Options:
 ```
@@ -160,11 +172,59 @@ optional arguments:
 ISP which removes annotations from instances
 
 #### Domain(s):
-
+- **Image Object-Detection Domain**
+- **Speech Domain**
+- **Image Classification Domain**
+- **Image Segmentation Domain**
 
 #### Options:
 ```
 usage: strip-annotations
 ```
 
+
+## Sink stage
+### TO-VOID-IC
+Consumes instances without writing them.
+
+#### Domain(s):
+- **Image Classification Domain**
+
+#### Options:
+```
+usage: to-void-ic
+```
+
+### TO-VOID-IS
+Consumes instances without writing them.
+
+#### Domain(s):
+- **Image Segmentation Domain**
+
+#### Options:
+```
+usage: to-void-is
+```
+
+### TO-VOID-OD
+Consumes instances without writing them.
+
+#### Domain(s):
+- **Image Object-Detection Domain**
+
+#### Options:
+```
+usage: to-void-od
+```
+
+### TO-VOID-SP
+Consumes instances without writing them.
+
+#### Domain(s):
+- **Speech Domain**
+
+#### Options:
+```
+usage: to-void-sp
+```
 

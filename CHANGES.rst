@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1.2 (2021-??-??)
+0.1.2 (2021-06-01)
 -------------------
 
 - Added void output formats for each domain which discard the conversion results.
