@@ -1,10 +1,11 @@
 from itertools import chain
-from typing import List, Tuple, Optional, Iterable, Iterator
+from typing import List, TextIO, Tuple, Optional, Iterable, Iterator
 
 from wai.common.cli.options import TypedOption, Option
 from wai.common.iterate import random
 
 from ...stream import ThenFunction, DoneFunction
+from ...stream.util import ProcessState
 from ...util import chain_map, recursive_iglob, read_file_list, InstanceState
 from .._SourceComponent import SourceComponent
 from ._WithRandomness import WithRandomness
@@ -46,6 +47,19 @@ class LocalFilenameSource(WithRandomness, SourceComponent[Tuple[str, bool]]):
         action="concat"
     )
 
+    # The filename to write read files to
+    output_filename: Optional[str] = TypedOption(
+        "-o", "--output-file",
+        type=str,
+        metavar="FILENAME",
+        help="optional file to write read filenames into"
+    )
+
+    # The open file handle to write to
+    _file_handle: Optional[TextIO] = ProcessState(
+        lambda self: open(self.output_filename, "w") if self.output_filename is not None else None
+    )
+
     def produce(
             self,
             then: ThenFunction[Tuple[str, bool]],
@@ -62,6 +76,8 @@ class LocalFilenameSource(WithRandomness, SourceComponent[Tuple[str, bool]]):
 
         for input in inputs:
             then((input, False))
+            if self._file_handle is not None:
+                self._file_handle.write(f"{input},false\n")
 
         negatives = self.negative_file_names
 
@@ -70,6 +86,11 @@ class LocalFilenameSource(WithRandomness, SourceComponent[Tuple[str, bool]]):
 
         for negative in negatives:
             then((negative, True))
+            if self._file_handle is not None:
+                self._file_handle.write(f"{negative},true\n")
+
+        if self._file_handle is not None:
+            self._file_handle.close()
 
         done()
 
