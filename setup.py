@@ -33,7 +33,7 @@ setup(
         "wai",
         "wai.annotations"
     ],
-    version="0.1.1",
+    version="0.1.2",
     author='Corey Sterling',
     author_email='coreytsterling@gmail.com',
     install_requires=[
@@ -51,6 +51,12 @@ setup(
     entry_points={
         "console_scripts": ["wai-annotations=wai.annotations.main:sys_main"],
         "wai.annotations.plugins": [
+            # Formats
+            "to-void-ic=wai.annotations.format.void.specifier:VoidICOutputFormatSpecifier",
+            "to-void-is=wai.annotations.format.void.specifier:VoidISOutputFormatSpecifier",
+            "to-void-od=wai.annotations.format.void.specifier:VoidODOutputFormatSpecifier",
+            "to-void-sp=wai.annotations.format.void.specifier:VoidSPOutputFormatSpecifier",
+
             # ISPs
             "coerce-box=wai.annotations.isp.coercions.specifier:BoxBoundsCoercionISPSpecifier",
             "coerce-mask=wai.annotations.isp.coercions.specifier:MaskBoundsCoercionISPSpecifier",
