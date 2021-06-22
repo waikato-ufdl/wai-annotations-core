@@ -33,7 +33,7 @@ setup(
         "wai",
         "wai.annotations"
     ],
-    version="0.1.2",
+    version="0.1.3",
     author='Corey Sterling',
     author_email='coreytsterling@gmail.com',
     install_requires=[
@@ -72,6 +72,7 @@ setup(
 
             # XDCs
             "od-to-is=wai.annotations.xdc.od_to_is.specifier:OD2ISXDCSpecifier",
+            "od-to-ic=wai.annotations.xdc.od_to_ic.specifier:OD2ICXDCSpecifier",
         ]
     }
 )

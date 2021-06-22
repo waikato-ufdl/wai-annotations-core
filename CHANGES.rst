@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.1.3 (2021-06-22)
+-------------------
+
+- Added cross-domain converter which reduces object-detection datasets to image classification
+  by looking for single/majority objects/labels.
+
 0.1.2 (2021-06-01)
 -------------------
 
