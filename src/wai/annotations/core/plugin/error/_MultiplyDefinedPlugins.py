@@ -11,7 +11,7 @@ class MultiplyDefinedPlugins(Exception):
         super().__init__("Some plugins are multiply-defined:\n" +
                          "\n".join(
                              f"{name}: {format_definitions}"
-                             for name, format_definitions in definitions
+                             for name, format_definitions in definitions.items()
                          ))
 
     @staticmethod
