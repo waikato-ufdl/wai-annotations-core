@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.1.4 (2021-09-28)
+------------------
+
+- Added ISP for discarding polygons that either have too few or too many points (`polygon-discarder`)
+- Added `--verbose` flag to `dimension-discarder` ISP for outputting information when an annotation
+  gets discarded.
+
 0.1.3 (2021-06-22)
 -------------------
 
