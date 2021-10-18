@@ -42,7 +42,7 @@ setup(
         "wai.bynning>=0.0.2,<0.1",
         "Pillow",
         "contextlib2",
-        "numpy>=1.16",
+        "numpy>=1.16,<1.20",
         "planar",
         "scikit-image",
         "wai.pycocotools",
