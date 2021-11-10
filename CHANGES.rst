@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1.4 (2021-11-09)
+0.1.4 (2021-11-11)
 ------------------
 
 - Added ISP for discarding polygons that either have too few or too many points (`polygon-discarder`)
