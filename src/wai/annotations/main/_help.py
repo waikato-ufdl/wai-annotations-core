@@ -17,7 +17,6 @@ def main_help() -> str:
         f"\n"
         f"for command-specific help.\n"
         f"\n"
-        f"See following URLs for usage and examples:\n"
-        f"https://github.com/waikato-ufdl/wai-annotations/blob/master/doc/USAGE.md\n"
-        f"https://github.com/waikato-ufdl/wai-annotations/blob/master/doc/EXAMPLES.md\n"
+        f"See following URL for usage and examples:\n"
+        f"https://ufdl.cms.waikato.ac.nz/wai-annotations-manual/\n"
     )
