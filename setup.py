@@ -52,6 +52,9 @@ setup(
         "console_scripts": ["wai-annotations=wai.annotations.main:sys_main"],
         "wai.annotations.plugins": [
             # Formats
+            "from-images-ic=wai.annotations.format.image.specifier:ImagesICInputFormatSpecifier",
+            "from-images-is=wai.annotations.format.image.specifier:ImagesISInputFormatSpecifier",
+            "from-images-od=wai.annotations.format.image.specifier:ImagesODInputFormatSpecifier",
             "to-void-ic=wai.annotations.format.void.specifier:VoidICOutputFormatSpecifier",
             "to-void-is=wai.annotations.format.void.specifier:VoidISOutputFormatSpecifier",
             "to-void-od=wai.annotations.format.void.specifier:VoidODOutputFormatSpecifier",

@@ -152,6 +152,82 @@ Filters detected objects down to those with specified labels.
                         regular expression for using only a subset of labels
 ```
 
+
+### FROM-IMAGES-IC
+Dummy reader that turns images into an image classification dataset.
+
+#### Domain(s):
+- **Image Classification Domain**
+
+#### Options:
+```
+usage: from-images-ic [-I FILENAME] [-i FILENAME] [-N FILENAME] [-n FILENAME] [-o FILENAME] [--seed SEED]
+
+optional arguments:
+  -I FILENAME, --inputs-file FILENAME
+                        Files containing lists of input files (can use glob syntax)
+  -i FILENAME, --input FILENAME
+                        Input files (can use glob syntax)
+  -N FILENAME, --negatives-file FILENAME
+                        Files containing lists of negative files (can use glob syntax)
+  -n FILENAME, --negative FILENAME
+                        Files that have no annotations (can use glob syntax)
+  -o FILENAME, --output-file FILENAME
+                        optional file to write read filenames into
+  --seed SEED           the seed to use for randomisation
+```
+
+
+### FROM-IMAGES-IS
+Dummy reader that turns images into an image segmentation dataset.
+
+#### Domain(s):
+- **Image Segmentation Domain**
+
+#### Options:
+```
+usage: from-images-is [-I FILENAME] [-i FILENAME] [-N FILENAME] [-n FILENAME] [-o FILENAME] [--seed SEED]
+
+optional arguments:
+  -I FILENAME, --inputs-file FILENAME
+                        Files containing lists of input files (can use glob syntax)
+  -i FILENAME, --input FILENAME
+                        Input files (can use glob syntax)
+  -N FILENAME, --negatives-file FILENAME
+                        Files containing lists of negative files (can use glob syntax)
+  -n FILENAME, --negative FILENAME
+                        Files that have no annotations (can use glob syntax)
+  -o FILENAME, --output-file FILENAME
+                        optional file to write read filenames into
+  --seed SEED           the seed to use for randomisation
+```
+
+
+### FROM-IMAGES-OD
+Dummy reader that turns images into an object detection dataset.
+
+#### Domain(s):
+- **Image Object-Detection Domain**
+
+#### Options:
+```
+usage: from-images-od [-I FILENAME] [-i FILENAME] [-N FILENAME] [-n FILENAME] [-o FILENAME] [--seed SEED]
+
+optional arguments:
+  -I FILENAME, --inputs-file FILENAME
+                        Files containing lists of input files (can use glob syntax)
+  -i FILENAME, --input FILENAME
+                        Input files (can use glob syntax)
+  -N FILENAME, --negatives-file FILENAME
+                        Files containing lists of negative files (can use glob syntax)
+  -n FILENAME, --negative FILENAME
+                        Files that have no annotations (can use glob syntax)
+  -o FILENAME, --output-file FILENAME
+                        optional file to write read filenames into
+  --seed SEED           the seed to use for randomisation
+```
+
+
 ### MAP-LABELS
 Maps object-detection labels from one set to another
 
