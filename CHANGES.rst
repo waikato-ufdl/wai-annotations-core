@@ -1,12 +1,11 @@
 Changelog
 =========
 
-0.1.5 (????-??-??)
+0.1.5 (2022-05-09)
 ------------------
 
 - Added dataset readers that generate dummy datasets from images: `from-images-ic`, `from-images-is`, `from-images-od`
 - Added dataset writers that just output the images from datasets: `to-images-ic`, `to-images-is`, `to-images-od`
-- ...
 
 0.1.4 (2021-11-11)
 ------------------
