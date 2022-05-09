@@ -371,6 +371,53 @@ ISP which removes annotations from instances
       usage: strip-annotations
 ```
 
+### TO-IMAGES-IC
+Dummy writer that just outputs images from image classification datasets.
+
+#### Domain(s):
+- **Image Classification Domain**
+
+#### Options:
+```
+usage: to-images-ic [-o OUTPUT_DIR]
+
+optional arguments:
+  -o OUTPUT_DIR, --output-dir OUTPUT_DIR
+                        the directory to write the images to
+```
+
+### TO-IMAGES-IS
+Dummy writer that just outputs images from image segmentation datasets.
+
+#### Domain(s):
+- **Image Segmentation Domain**
+
+#### Options:
+```
+usage: to-images-is [-o OUTPUT_DIR]
+
+optional arguments:
+  -o OUTPUT_DIR, --output-dir OUTPUT_DIR
+                        the directory to write the images to
+```
+
+
+### TO-IMAGES-OD
+Dummy writer that just outputs images from object detection datasets.
+
+#### Domain(s):
+- **Image Object-Detection Domain**
+
+#### Options:
+```
+usage: to-images-od [-o OUTPUT_DIR]
+
+optional arguments:
+  -o OUTPUT_DIR, --output-dir OUTPUT_DIR
+                        the directory to write the images to
+```
+
+
 ### TO-VOID-IC
 Consumes instances without writing them.
 

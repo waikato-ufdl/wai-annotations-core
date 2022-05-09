@@ -1,3 +1,3 @@
-from ._ImagesIC import ImagesIC
-from ._ImagesIS import ImagesIS
-from ._ImagesOD import ImagesOD
+from ._ImagesIC import ImagesReaderIC, ImagesWriterIC
+from ._ImagesIS import ImagesReaderIS, ImagesWriterIS
+from ._ImagesOD import ImagesReaderOD, ImagesWriterOD

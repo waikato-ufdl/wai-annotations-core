@@ -2,22 +2,21 @@ from typing import Type, Tuple
 
 from wai.annotations.core.component import Component
 from wai.annotations.core.domain import DomainSpecifier
-from wai.annotations.core.specifier import SourceStageSpecifier
+from wai.annotations.core.specifier import SinkStageSpecifier
 
 
-class ImagesODInputFormatSpecifier(SourceStageSpecifier):
+class ImagesODOutputFormatSpecifier(SinkStageSpecifier):
     """
-    Specifier of the components for turning images into an object detection dataset.
+    Specifier of the components for writing images from from an object detection dataset.
     """
     @classmethod
     def description(cls) -> str:
-        return "Dummy reader that turns images into an object detection dataset."
+        return "Dummy writer that just outputs images from object detection datasets."
 
     @classmethod
     def components(cls) -> Tuple[Type[Component], ...]:
-        from wai.annotations.core.component.util import LocalFilenameSource
-        from wai.annotations.format.image.component import ImagesReaderOD
-        return LocalFilenameSource, ImagesReaderOD
+        from wai.annotations.format.image.component import ImagesWriterOD
+        return ImagesWriterOD,
 
     @classmethod
     def domain(cls) -> Type[DomainSpecifier]:

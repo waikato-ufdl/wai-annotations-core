@@ -16,8 +16,8 @@ class ImagesISInputFormatSpecifier(SourceStageSpecifier):
     @classmethod
     def components(cls) -> Tuple[Type[Component], ...]:
         from wai.annotations.core.component.util import LocalFilenameSource
-        from wai.annotations.format.image.component import ImagesIS
-        return LocalFilenameSource, ImagesIS
+        from wai.annotations.format.image.component import ImagesReaderIS
+        return LocalFilenameSource, ImagesReaderIS
 
     @classmethod
     def domain(cls) -> Type[DomainSpecifier]:
