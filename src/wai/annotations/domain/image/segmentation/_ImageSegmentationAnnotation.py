@@ -27,7 +27,7 @@ class ImageSegmentationAnnotation:
     @labels.setter
     def labels(self, value: List[str]):
         if len(value) < self.max_index:
-            raise Exception("Not enough labels provided for current state of indices")
+            raise Exception("Not enough labels provided for current state of indices: %d < %d" % ((len(value), self.max_index)))
 
         self._labels = list(value)
 
@@ -47,13 +47,13 @@ class ImageSegmentationAnnotation:
     def indices(self, value: np.ndarray):
         # Make sure the array is of the correct shape/type
         if value.shape != self._indices.shape:
-            raise Exception("Can't change shape of index array")
+            raise Exception("Can't change shape of index array: current=%s, supplied=%d" % (str(self._indices.shape), str(value.shape)))
         elif value.dtype != np.uint16:
-            raise Exception("Can't change type of index array")
+            raise Exception("Can't change type of index array, must be np.uint16")
 
         # Make sure there are enough labels for the indices
         if np.max(value) > len(self._labels):
-            raise Exception("Not enough labels for this array")
+            raise Exception("Not enough labels for this array: %d < %d" % (len(self._labels), np.max(value)))
 
         self._indices = value
         self._indices.flags.writeable = False
