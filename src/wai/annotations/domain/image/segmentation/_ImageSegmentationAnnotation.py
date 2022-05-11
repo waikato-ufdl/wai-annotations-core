@@ -1,5 +1,6 @@
 import numpy as np
 from typing import Tuple, List
+from PIL import Image
 
 
 class ImageSegmentationAnnotation:
@@ -7,6 +8,9 @@ class ImageSegmentationAnnotation:
     Represents the annotations for a single image in an image-segmentation
     data-set. Consists of an array of indices into a table of labels.
     """
+
+    BYTE_PLACE_MULTIPLIER = np.array([list(1 << i for i in reversed(range(8)))], np.uint8)
+
     def __init__(self, labels: List[str], size: Tuple[int, int]):
         self._labels = list(labels)
         self._size = size
@@ -53,6 +57,40 @@ class ImageSegmentationAnnotation:
 
         self._indices = value
         self._indices.flags.writeable = False
+        self._label_images = None
+
+    @property
+    def label_images(self):
+        """
+        Decompresses the annotation layers.
+
+        :return: the dictionary with the layers, key is name of layer
+        :rtype: dict
+        """
+        label_images = dict()
+        # Process each label separately
+        for label_index, label in enumerate(self.labels, 1):
+            # Rows are packed into bytes, so the length must be a multiple of 8
+            row_pad = (8 - self.size[0]) % 8
+            # Select the pixels which match this label
+            selector_array: np.ndarray = (self.indices == label_index)
+            # If no pixels match this label, no need to create an image
+            if not selector_array.any():
+                continue
+            # Pad the rows
+            selector_array = np.pad(selector_array, ((0, 0), (0, row_pad)))
+            # Striate the pixels, 8 to a row (includes packing bits)
+            selector_array.resize((selector_array.size // 8, 8), refcheck=False)
+            # Multiply each applicable bit by its position value in the byte
+            selector_array = selector_array * self.BYTE_PLACE_MULTIPLIER
+            # Reduce the individual pixels to a byte per group of 8
+            selector_array = np.sum(selector_array, 1, np.uint8, keepdims=True)
+            # Create the 1-bit image for the label
+            annotation = Image.frombytes("1", self.size, selector_array.tostring())
+            # Append the image and its label to the list
+            label_images[label] = annotation
+
+        return label_images
 
     @property
     def max_index(self) -> int:

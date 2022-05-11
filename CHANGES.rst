@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.1.6 (2022-05-11)
+------------------
+
+- Image segmentation annotations received new `label_images` property that returns images per
+  label (as a dictionary); moved from the ToLayerSegments conversion (wai.annotations.layersegments)
+
+
 0.1.5 (2022-05-09)
 ------------------
 
