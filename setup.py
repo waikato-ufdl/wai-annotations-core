@@ -68,6 +68,7 @@ setup(
             "coerce-mask=wai.annotations.isp.coercions.specifier:MaskBoundsCoercionISPSpecifier",
             "convert-image-format=wai.annotations.isp.convert_image_format.specifier:ConvertImageFormatISPSpecifier",
             "dimension-discarder=wai.annotations.isp.dimension_discarder.specifier:DimensionDiscarderISPSpecifier",
+            "discard-invalid-images=wai.annotations.isp.discard_invalid_images.specifier:DiscardInvalidImagesISPSpecifier",
             "discard-negatives=wai.annotations.isp.discard_negatives.specifier:DiscardNegativesISPSpecifier",
             "check-duplicate-filenames=wai.annotations.isp.duplicate_filenames.specifier:DuplicateFileNamesISPSpecifier",
             "filter-labels=wai.annotations.isp.filter_labels.specifier:FilterLabelsISPSpecifier",

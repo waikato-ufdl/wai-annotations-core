@@ -1,1 +1,1 @@
-Python library for converting between deep-learning annotation formats.
+wai.annotations core module, containing core data structures and basic data loading and preprocessing techniques.

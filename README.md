@@ -1,5 +1,5 @@
 # wai-annotations-core
-wai.annotations core module.
+wai.annotations core module, containing core data structures and basic data loading and preprocessing techniques.
 
 The manual is available here:
 
@@ -110,6 +110,23 @@ Removes annotations which fall outside certain size constraints
                         the minimum width of annotations to convert
         --verbose       outputs information when discarding annotations
 ```
+
+### DISCARD-INVALID-IMAGES
+Discards images that cannot be loaded (e.g., corrupt image file or annotations with no image)
+
+#### Domain(s):
+- **Image Segmentation Domain**
+- **Image Object-Detection Domain**
+- **Image Classification Domain**
+
+#### Options:
+```
+usage: discard-invalid-images [-v]
+
+optional arguments:
+  -v, --verbose  whether to output debugging information
+```
+
 
 ### DISCARD-NEGATIVES
 Discards negative examples (those without annotations) from the stream
