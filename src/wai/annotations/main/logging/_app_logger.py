@@ -66,7 +66,7 @@ def create_application_root_logger() -> logging.Logger:
         try:
             level = int(level_str)
         except:
-            print("Failed to parse log level (0-50): %s" % level_str)
+            print("Failed to parse log level (10=DEBUG, 20=INFO, 30=WARNING, 40=ERROR): %s" % level_str)
             level = logging.DEBUG
 
     # Add the handlers to the logger and set the level
