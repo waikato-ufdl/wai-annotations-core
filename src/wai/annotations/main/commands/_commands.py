@@ -3,6 +3,7 @@ Functionality for working with the available commands as a group.
 """
 from typing import Dict, List
 
+from .batch_split import batch_split_main
 from .convert import convert_main
 from .domains import domains_main
 from .plugins import plugins_main
@@ -12,7 +13,8 @@ from ._typing import CommandMain
 __commands: Dict[str, CommandMain] = {
     "convert": convert_main,
     "plugins": plugins_main,
-    "domains": domains_main
+    "domains": domains_main,
+    "batch-split": batch_split_main,
 }
 
 

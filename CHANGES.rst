@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - Added `discard-invalid-images` ISP for removing corrupt images or annotations with no image attached
+- Added `batch-split` sub-command for splitting individual batches of annotations into subsets like train/test/val
 
 
 0.1.6 (2022-05-11)
