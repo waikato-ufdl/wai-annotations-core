@@ -1,7 +1,7 @@
-from argparse import HelpFormatter
+from argparse import ArgumentDefaultsHelpFormatter
 
 
-class PluginUsageFormatter(HelpFormatter):
+class PluginUsageFormatter(ArgumentDefaultsHelpFormatter):
     """
     Helper class for formatting the usage options of plugin components.
     """

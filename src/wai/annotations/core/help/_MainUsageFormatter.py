@@ -1,7 +1,7 @@
-from argparse import HelpFormatter
+from argparse import ArgumentDefaultsHelpFormatter
 
 
-class MainUsageFormatter(HelpFormatter):
+class MainUsageFormatter(ArgumentDefaultsHelpFormatter):
     """
     Helper class for formatting the main usage message.
     """
