@@ -178,6 +178,7 @@ def perform_batch_split(options: BatchSplitOptions):
             file_names = splits[label]
             if options.VERBOSE:
                 get_app_logger().debug("%s: %d" % (label, len(file_names)))
+
             # output file
             if options.OUTPUT_NAMING == OUTPUT_NAMING_ENUMERATE:
                 name = str(_input_index+1)
@@ -185,8 +186,15 @@ def perform_batch_split(options: BatchSplitOptions):
                 name = os.path.basename(os.path.dirname(_input))
             else:
                 raise Exception("Unhandled output naming: %s" % options.OUTPUT_NAMING)
-            out_file = os.path.join(options.OUTPUT_DIR, name + "-" + label + options.OUTPUT_EXT)
+
+            # create output dir if necessary
+            if not os.path.exists(options.OUTPUT_DIR):
+                if options.VERBOSE:
+                    get_app_logger().debug("Creating output dir: %s" % options.OUTPUT_DIR)
+                os.mkdir(options.OUTPUT_DIR)
+
             # save files
+            out_file = os.path.join(options.OUTPUT_DIR, name + "-" + label + options.OUTPUT_EXT)
             if options.VERBOSE:
                 get_app_logger().debug("Saving split to: %s" % out_file)
             with open(out_file, "w") as fp:
