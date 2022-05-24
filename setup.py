@@ -37,7 +37,7 @@ setup(
     author='Corey Sterling',
     author_email='coreytsterling@gmail.com',
     install_requires=[
-        "wai.common>=0.0.35",
+        "wai.common>=0.0.39",
         "wai.json>=0.0.4,<0.1",
         "wai.bynning>=0.0.2,<0.1",
         "Pillow",
@@ -72,6 +72,7 @@ setup(
             "discard-negatives=wai.annotations.isp.discard_negatives.specifier:DiscardNegativesISPSpecifier",
             "check-duplicate-filenames=wai.annotations.isp.duplicate_filenames.specifier:DuplicateFileNamesISPSpecifier",
             "filter-labels=wai.annotations.isp.filter_labels.specifier:FilterLabelsISPSpecifier",
+            "filter-metadata=wai.annotations.isp.filter_metadata.specifier:FilterMetadataISPSpecifier",
             "map-labels=wai.annotations.isp.map_labels.specifier:MapLabelsISPSpecifier",
             "passthrough=wai.annotations.isp.passthrough.specifier:PassThroughISPSpecifier",
             "polygon-discarder=wai.annotations.isp.polygon_discarder.specifier:PolygonDiscarderISPSpecifier",

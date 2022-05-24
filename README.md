@@ -170,6 +170,25 @@ Filters detected objects down to those with specified labels.
 ```
 
 
+### FILTER-METADATA
+Filters detected objects based on their meta-data.
+
+#### Domain(s):
+- **Image Object-Detection Domain**
+
+#### Options:
+```
+usage: filter-metadata [-c COMPARISON] [-k KEY] [-t VALUE_TYPE]
+
+optional arguments:
+  -c COMPARISON, --comparison COMPARISON
+                        the comparison to apply to the value: for bool/numeric/string '=OTHER' and '!=OTHER' can be used, for numeric furthermore '<OTHER', '<=OTHER', '>=OTHER', '>OTHER'. E.g.: '<3.0' for numeric types will discard any annotations that have a value of 3.0 or larger (default: None)
+  -k KEY, --key KEY     the key of the meta-data value to use for the filtering (default: None)
+  -t VALUE_TYPE, --value-type VALUE_TYPE
+                        the data type that the value represents, available options: bool|numeric|string (default: None)
+```
+
+
 ### FROM-IMAGES-IC
 Dummy reader that turns images into an image classification dataset.
 
