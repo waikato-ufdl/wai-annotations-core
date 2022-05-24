@@ -17,7 +17,7 @@ def plugin_usage_formatter_with_default_start_indent(start_indent: int) -> Type[
                      prog,
                      indent_increment=2,
                      max_help_position=24,
-                     width=10000):
+                     width=100):
             super().__init__(prog,
                              indent_increment=indent_increment,
                              max_help_position=max_help_position,

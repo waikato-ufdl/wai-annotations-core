@@ -9,7 +9,7 @@ class PluginUsageFormatter(ArgumentDefaultsHelpFormatter):
                  prog,
                  indent_increment=2,
                  max_help_position=24,
-                 width=10000,
+                 width=100,
                  start_indent=0):
         super().__init__(prog,
                          indent_increment=indent_increment,
