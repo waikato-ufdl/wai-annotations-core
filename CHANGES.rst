@@ -8,6 +8,7 @@ Changelog
 - Added `batch-split` sub-command for splitting individual batches of annotations into subsets like train/test/val
 - Added `filter-metadata` ISP for filtering object detection
 - Restricted maximum characters per line in help output to 100 to avoid long help strings to become unreadable
+- The `polygon-discarder` now annotations that either have no polygon or invalid polygons
 
 
 0.1.6 (2022-05-11)
