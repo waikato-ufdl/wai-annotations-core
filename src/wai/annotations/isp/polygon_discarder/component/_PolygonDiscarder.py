@@ -60,10 +60,14 @@ class PolygonDiscarder(
 
         if not located_object.has_polygon():
             if log:
-                self.logger.info("No polygon, skipping")
-            return False
+                self.logger.info("No polygon, discarding")
+            return True
 
         poly = located_object.get_actual_polygon()
+        if poly is None:
+            if log:
+                self.logger.info("None polygon, discarding")
+            return True
         num_points = len(poly.points)
 
         # Min points check
