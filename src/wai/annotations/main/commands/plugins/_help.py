@@ -11,4 +11,5 @@ def plugins_help() -> str:
     """
     return PluginsOptions.get_configured_parser(
         prog="wai-annotations plugins",
+        description="Outputs command-line help information on one or more plugins, in plain text or markdown.",
         formatter_class=MainUsageFormatter).format_help()

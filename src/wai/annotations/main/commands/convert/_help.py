@@ -11,5 +11,6 @@ def convert_help() -> str:
     """
     return ConvertOptions.get_configured_parser(
                 prog="wai-annotations convert",
+                description="Defines the stages in a conversion pipeline: Source [ISP [ISP ...]] Sink",
                 formatter_class=MainUsageFormatter
             ).format_help()

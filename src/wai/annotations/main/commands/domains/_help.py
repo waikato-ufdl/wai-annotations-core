@@ -11,4 +11,5 @@ def domains_help() -> str:
     """
     return DomainsOptions.get_configured_parser(
         prog="wai-annotations domains",
+        description="Outputs information on the (data) domains available within the virtual environment.",
         formatter_class=MainUsageFormatter).format_help()

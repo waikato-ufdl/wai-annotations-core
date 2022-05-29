@@ -5,6 +5,113 @@ The manual is available here:
 
 https://ufdl.cms.waikato.ac.nz/wai-annotations-manual/
 
+
+## Commands
+
+The following sections contain the help screens of the wai.annotations main commands.  
+
+### batch-split
+
+```
+usage: wai-annotations batch-split [-d DIR [DIR ...]] [-g GLOB] [--grouping-groups GROUPS]
+                                   [--grouping-regexp REGEXP] [-h] [-i FILENAME [FILENAME ...]] [-o DIR]
+                                   [--output-ext EXT] [-O NAMING] [-s SEED] [-n [SPLIT NAME [SPLIT NAME ...]]]
+                                   [-r RATIO [RATIO ...]] [-v] [STAGE [STAGE ...]]
+
+When datasets contain multiple batches, it is recommended to get the same distribution of each batch when
+generating train/test/validation datasets. The 'batch-split' command allows you to generate these splits for
+each batch separately, outputting .list files that can be used as input for conversion plugins (using '-I'
+instead of '-i'). Furthermore, it is possible to group files within a batch that should stay together,
+e.g.,images that depict the same object(s) and can be distinguished via a prefix or suffix. The grouping is
+achieved via regular expression groups.
+
+optional arguments:
+  -d DIR [DIR ...], --dir DIR [DIR ...]
+                        the batch directories to look for files using the supplied glob expression (--glob)
+                        (default: [])
+  -g GLOB, --glob GLOB  the glob expression to apply when looking for files in the input directories (--dir),
+                        e.g., '*.xml' (default: None)
+  --grouping-groups GROUPS
+                        the comma-separated list of regular expression group indices (0: all, 1: first group,
+                        etc) that will make up the string for identifying files to treat as single unit, e.g.:
+                        '1,3' (default: None)
+  --grouping-regexp REGEXP
+                        the regular expression with groups for combining files into groups that get treated as
+                        a unit, e.g.: '([a-z]+)(-a|-b|-c)(-[a-z]+).csv' (default: None)
+  -h, --help            prints this help message and exits (default: False)
+  -i FILENAME [FILENAME ...], --input FILENAME [FILENAME ...]
+                        each -i/--input defines a single batch that gets split separately, to be used with glob
+                        syntax, e.g., '-i /some/where/*.xml' (default: [])
+  -o DIR, --output-dir DIR
+                        the directory to store the generated splits in as files (default: *)
+  --output-ext EXT      the extension to use for the split files (incl dot) (default: .list)
+  -O NAMING, --output-naming NAMING
+                        how the generate the name for the created split files in the output directory:
+                        enumerate|input_dir (default: input_dir)
+  -s SEED, --seed SEED  the seed value to use for randomizing the input files (default: None)
+  -n [SPLIT NAME [SPLIT NAME ...]], --split-names [SPLIT NAME [SPLIT NAME ...]]
+                        the names to use for the batch splits (default: [])
+  -r RATIO [RATIO ...], --split-ratios RATIO [RATIO ...]
+                        the ratios to use for the batch splits (default: [])
+  -v, --verbose         outputs debugging information (default: False)
+```
+
+### convert
+
+```
+usage: wai-annotations convert [-h] [--macro-file FILENAME] [-v] [STAGE [STAGE ...]]
+
+Defines the stages in a conversion pipeline: Source [ISP [ISP ...]] Sink
+
+optional arguments:
+  -h, --help            prints this help message and exits (default: False)
+  --macro-file FILENAME
+                        the file to load macros from (default: )
+  -v                    whether to be more verbose when generating the records (default: 0)
+```
+
+### domains
+
+```
+usage: wai-annotations domains [-d] [-f {cli,markdown}] [-h] [-o DOMAIN [DOMAIN ...]] [STAGE [STAGE ...]]
+
+Outputs information on the (data) domains available within the virtual environment.
+
+optional arguments:
+  -d, --no-descriptions
+                        whether to suppress the descriptions of the plugins (default: True)
+  -f {cli,markdown}, --formatting {cli,markdown}
+                        the formatting style to print the domains in (default: cli)
+  -h, --help            prints this help message and exits (default: False)
+  -o DOMAIN [DOMAIN ...], --only DOMAIN [DOMAIN ...]
+                        restrict the set of domains to only those specified (default: [])
+```
+
+### plugins
+
+```
+usage: wai-annotations plugins [-d] [-D] [-f {cli,markdown}] [-g] [-h] [-o PLUGIN [PLUGIN ...]]
+                               [-O TYPE [TYPE ...]] [-n] [STAGE [STAGE ...]]
+
+Outputs command-line help information on one or more plugins, in plain text or markdown.
+
+optional arguments:
+  -d, --no-descriptions
+                        whether to suppress the descriptions of the plugins (default: True)
+  -D, --no-domains      whether to suppress the domains of the plugins (default: True)
+  -f {cli,markdown}, --formatting {cli,markdown}
+                        the formatting style to print the plugins in (default: cli)
+  -g, --group-by-type   whether to group the plugins by their function (default: False)
+  -h, --help            prints this help message and exits (default: False)
+  -o PLUGIN [PLUGIN ...], --only PLUGIN [PLUGIN ...]
+                        restrict the set of plugins to only those specified (default: [])
+  -O TYPE [TYPE ...], --only-types TYPE [TYPE ...]
+                        restricts the set of plugins to only the specified types (can be source, sink, or
+                        processor) (default: [])
+  -n, --no-options      whether to suppress the options to the plugin (default: True)
+```
+
+
 ## Plugins
 
 ### CHECK-DUPLICATE-FILENAMES
