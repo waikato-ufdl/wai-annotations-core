@@ -97,6 +97,24 @@ class BatchSplitOptions(CLIInstantiable):
         help="the extension to use for the split files (incl dot)"
     )
 
+    # the suffix for the split files
+    GROUPING_REGEXP: str = TypedOption(
+        "--grouping-regexp",
+        type=str,
+        metavar="REGEXP",
+        default=None,
+        help="the regular expression with groups for combining files into groups that get treated as a unit, e.g.: '([a-z]+)(-a|-b|-c)(-[a-z]+).csv'"
+    )
+
+    # the suffix for the split files
+    GROUPING_GROUPS: str = TypedOption(
+        "--grouping-groups",
+        type=str,
+        metavar="GROUPS",
+        default=None,
+        help="the comma-separated list of regular expression group indices (0: all, 1: first group, etc) that will make up the string for identifying files to treat as single unit, e.g.: '1,3'"
+    )
+
     # Override the default help option
     VERBOSE = FlagOption(
         "-v", "--verbose",

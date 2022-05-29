@@ -3,6 +3,7 @@ Module containing the main entry point function for getting information about
 domains registered with wai.annotations.
 """
 import os
+import re
 from itertools import chain
 from random import Random
 from typing import Dict, Tuple, Optional, Iterable, List
@@ -58,18 +59,24 @@ class Splitter(object):
     Based on code from wai.annotations.core.util.SplitSink
     """
 
-    def __init__(self, names: List[str], ratios: List[int], file_names: List[str]):
+    def __init__(self, names: List[str], ratios: List[int], file_names: List[str], regexp: str = None, groups: List[int] = None):
         """
         Initializes the splitter with the names/ratios of the splits.
 
         :param names: the list of split names
         :param ratios: the list of split ratios
         :param file_names: the file names to split
+        :param regexp: the regular expression to use for grouping file names into units that stay together
+        :param groups: the list of group indices (starting at 1) to use for generating a unit of file names
         """
         self.split_names = names
         self.split_ratios = ratios
         self.split_index = 0
         self.file_names = file_names
+        self.regexp = regexp
+        self.groups = groups
+        print("regexp", regexp)
+        print("groups", groups)
 
     @InstanceState
     def _split_table(self) -> Dict[Optional[str], int]:
@@ -127,6 +134,50 @@ class Splitter(object):
         """
         self.split_index = (self.split_index + 1) % len(self._split_schedule)
 
+    def _group_file_names(self):
+        """
+        Groups the filenames into units, if necessary.
+
+        :return: the grouped filenames
+        :rtype: list
+        """
+        if (self.regexp is None) or (self.groups is None):
+            return self.file_names
+
+        units = {}
+        for file_name in self.file_names:
+            res = re.search(self.regexp, file_name)
+            group_str = ""
+            for i in range(len(self.groups)):
+                if i > 0:
+                    group_str += "\t"
+                group_str += str(res.group(self.groups[i]))
+            if group_str not in units:
+                units[group_str] = []
+            units[group_str].append(file_name)
+
+        keys = list(units.keys())
+        keys.sort()
+
+        result = []
+        for key in keys:
+            result.append(units[key])
+
+        return result
+
+    def _ungroup_unit(self, unit):
+        """
+        Ungroups units of filenames.
+
+        :param unit: the unit to ungroup
+        :return: the ungrouped file names
+        :rtype: list
+        """
+        if (self.regexp is None) or (self.groups is None):
+            return [unit]
+        else:
+            return unit
+
     @InstanceState
     def splits(self) -> Dict[str, List[str]]:
         """
@@ -135,9 +186,10 @@ class Splitter(object):
         result = dict()
         for split_name in self.split_names:
             result[split_name] = []
-        for file_name in self.file_names:
+        units = self._group_file_names()
+        for unit in units:
             label = self._split_label
-            result[label].append(file_name)
+            result[label].extend(self._ungroup_unit(unit))
             self._move_to_next_split()
 
         return result
@@ -161,6 +213,10 @@ def perform_batch_split(options: BatchSplitOptions):
         input_files.append(os.path.join(_dir, options.GLOB))
 
     # locate/process files
+    if options.GROUPING_GROUPS is None:
+        groups = None
+    else:
+        groups = [int(x) for x in options.GROUPING_GROUPS.split(",")]
     for _input_index, _input in enumerate(input_files):
         # load files
         if options.VERBOSE:
@@ -170,7 +226,7 @@ def perform_batch_split(options: BatchSplitOptions):
             get_app_logger().debug("# files found: %d" % len(all_file_names))
 
         # split files
-        splitter = Splitter(names=options.SPLIT_NAMES, ratios=options.SPLIT_RATIOS, file_names=all_file_names)
+        splitter = Splitter(names=options.SPLIT_NAMES, ratios=options.SPLIT_RATIOS, file_names=all_file_names, regexp=options.GROUPING_REGEXP, groups=groups)
         splits = splitter.splits
 
         # save splits
