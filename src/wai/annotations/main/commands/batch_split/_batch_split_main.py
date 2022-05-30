@@ -59,7 +59,7 @@ class Splitter(object):
     Based on code from wai.annotations.core.util.SplitSink
     """
 
-    def __init__(self, names: List[str], ratios: List[int], file_names: List[str], regexp: str = None, groups: List[int] = None):
+    def __init__(self, names: List[str], ratios: List[int], file_names: List[str], regexp: str = None, groups: List[int] = None, verbose:bool = False):
         """
         Initializes the splitter with the names/ratios of the splits.
 
@@ -68,6 +68,7 @@ class Splitter(object):
         :param file_names: the file names to split
         :param regexp: the regular expression to use for grouping file names into units that stay together
         :param groups: the list of group indices (starting at 1) to use for generating a unit of file names
+        :param verbose: whether to output some debugging information
         """
         self.split_names = names
         self.split_ratios = ratios
@@ -75,6 +76,7 @@ class Splitter(object):
         self.file_names = file_names
         self.regexp = regexp
         self.groups = groups
+        self.verbose = verbose
 
     @InstanceState
     def _split_table(self) -> Dict[Optional[str], int]:
@@ -181,14 +183,21 @@ class Splitter(object):
         """
         Calculates and returns the splits.
         """
+        if self.verbose:
+            get_app_logger().debug("# files: %d" % len(self.file_names))
         result = dict()
         for split_name in self.split_names:
             result[split_name] = []
         units = self._group_file_names()
+        if self.verbose and (self.regexp is not None):
+            get_app_logger().debug("# units: %d" % len(units))
         for unit in units:
             label = self._split_label
             result[label].extend(self._ungroup_unit(unit))
             self._move_to_next_split()
+        if self.verbose:
+            for split_name in self.split_names:
+                get_app_logger().debug("# files in split '%s': %d" % (split_name, len(result[split_name])))
 
         return result
 
@@ -224,7 +233,8 @@ def perform_batch_split(options: BatchSplitOptions):
             get_app_logger().debug("# files found: %d" % len(all_file_names))
 
         # split files
-        splitter = Splitter(names=options.SPLIT_NAMES, ratios=options.SPLIT_RATIOS, file_names=all_file_names, regexp=options.GROUPING_REGEXP, groups=groups)
+        splitter = Splitter(names=options.SPLIT_NAMES, ratios=options.SPLIT_RATIOS, file_names=all_file_names,
+                            regexp=options.GROUPING_REGEXP, groups=groups, verbose=options.VERBOSE)
         splits = splitter.splits
 
         # save splits
