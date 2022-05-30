@@ -75,8 +75,6 @@ class Splitter(object):
         self.file_names = file_names
         self.regexp = regexp
         self.groups = groups
-        print("regexp", regexp)
-        print("groups", groups)
 
     @InstanceState
     def _split_table(self) -> Dict[Optional[str], int]:
