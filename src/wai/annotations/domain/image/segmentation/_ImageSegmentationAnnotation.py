@@ -53,7 +53,8 @@ class ImageSegmentationAnnotation:
 
         # Make sure there are enough labels for the indices
         if np.max(value) > len(self._labels):
-            raise Exception("Not enough labels for this array: %d < %d" % (len(self._labels), np.max(value)))
+            unique = [str(x) for x in list(np.unique(value))]
+            raise Exception("Not enough labels for this array: %d < %d (unique values: %s)" % (len(self._labels), np.max(value), ",".join(unique)))
 
         self._indices = value
         self._indices.flags.writeable = False

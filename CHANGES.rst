@@ -11,6 +11,8 @@ Changelog
 - Restricted maximum characters per line in help output to 100 to avoid long help strings to become unreadable.
 - The `polygon-discarder` now annotations that either have no polygon or invalid polygons.
 - Added descriptions to the help screens of the main commands.
+- The `ImageSegmentationAnnotation` class now outputs the unique values in its exception when there are
+  more unique values than labels
 
 
 0.1.6 (2022-05-11)
