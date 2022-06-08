@@ -1,9 +1,10 @@
 import os
 from abc import abstractmethod
 from typing import Optional
+from ..logging import LoggingEnabled, get_library_root_logger
 
 
-class Data:
+class Data(LoggingEnabled):
     """
     The base class for representing a single item in a data-set, without
     its annotations. Should be sub-typed by specific domains to represent
@@ -40,6 +41,8 @@ class Data:
         if os.path.exists(filepath):
             with open(filepath, "rb") as file:
                 data = file.read()
+        else:
+            get_library_root_logger().warning("Missing file, cannot read data: %s" % filepath)
 
         return cls.from_file_data(filepath, data)
 

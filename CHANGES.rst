@@ -13,6 +13,8 @@ Changelog
 - Added descriptions to the help screens of the main commands.
 - The `ImageSegmentationAnnotation` class now outputs the unique values in its exception when there are
   more unique values than labels
+- The `Data` class (module: `wai.annotations.core.domain`) now outputs a warning message if a file cannot
+  be read; also added `LoggingEnabled` mixin.
 
 
 0.1.6 (2022-05-11)
