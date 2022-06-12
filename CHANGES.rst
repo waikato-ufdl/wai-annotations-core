@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1.7 (????-??-??)
+0.1.7 (2022-06-13)
 ------------------
 
 - Added `discard-invalid-images` ISP for removing corrupt images or annotations with no image attached.
