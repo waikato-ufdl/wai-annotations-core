@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.1.8 (???-??-??)
+-----------------
+
+- Added dataset reader for audio files: `from-audio-file-sp`
+- Added dataset writer for audio files: `to-audio-file-sp`
+
+
 0.1.7 (2022-06-13)
 ------------------
 

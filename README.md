@@ -295,6 +295,31 @@ optional arguments:
                         the data type that the value represents, available options: bool|numeric|string (default: None)
 ```
 
+### FROM-AUDIO-FILES-SP
+Dummy reader that turns audio files into a speech dataset.
+
+#### Domain(s):
+- **Speech Domain**
+
+#### Options:
+```
+usage: from-audio-files-sp [-I FILENAME] [-i FILENAME] [-N FILENAME] [-n FILENAME] [-o FILENAME]
+                          [--seed SEED]
+
+optional arguments:
+  -I FILENAME, --inputs-file FILENAME
+                        Files containing lists of input files (can use glob syntax) (default: [])
+  -i FILENAME, --input FILENAME
+                        Input files (can use glob syntax) (default: [])
+  -N FILENAME, --negatives-file FILENAME
+                        Files containing lists of negative files (can use glob syntax) (default: [])
+  -n FILENAME, --negative FILENAME
+                        Files that have no annotations (can use glob syntax) (default: [])
+  -o FILENAME, --output-file FILENAME
+                        optional file to write read filenames into (default: None)
+  --seed SEED           the seed to use for randomisation (default: None)
+```
+
 
 ### FROM-IMAGES-IC
 Dummy reader that turns images into an image classification dataset.
@@ -513,6 +538,22 @@ ISP which removes annotations from instances
 
       usage: strip-annotations
 ```
+
+### TO-AUDIO-FILES-SP
+Dummy writer that just outputs audio files from speech datasets.
+
+#### Domain(s):
+- **Speech Domain**
+
+#### Options:
+```
+usage: to-audio-fileS-sp [-o OUTPUT_DIR]
+
+optional arguments:
+  -o OUTPUT_DIR, --output-dir OUTPUT_DIR
+                        the directory to write the audio files to (default: .)
+```
+
 
 ### TO-IMAGES-IC
 Dummy writer that just outputs images from image classification datasets.
