@@ -7,7 +7,7 @@ Preparation:
 * update plugin section in `README.md`
 * commit/push all changes
 
-Commands for releasing on pypi-waikato (requires twine >= 1.8.0):
+Commands for releasing on pypi (requires twine >= 1.8.0):
 
 ```
   rm -r dist src/wai.annotations.core.egg-info
