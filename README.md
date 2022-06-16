@@ -643,6 +643,17 @@ optional arguments:
                         the directory to write the images to
 ```
 
+### TO-VOID-AC
+Consumes instances without writing them.
+
+#### Domain(s):
+- **Audio classification domain**
+
+#### Options:
+```
+usage: to-void-ac
+```
+
 
 ### TO-VOID-IC
 Consumes instances without writing them.

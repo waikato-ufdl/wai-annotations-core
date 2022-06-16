@@ -62,6 +62,7 @@ setup(
             "to-images-ic=wai.annotations.format.image.specifier:ImagesICOutputFormatSpecifier",
             "to-images-is=wai.annotations.format.image.specifier:ImagesISOutputFormatSpecifier",
             "to-images-od=wai.annotations.format.image.specifier:ImagesODOutputFormatSpecifier",
+            "to-void-ac=wai.annotations.format.void.specifier:VoidACOutputFormatSpecifier",
             "to-void-ic=wai.annotations.format.void.specifier:VoidICOutputFormatSpecifier",
             "to-void-is=wai.annotations.format.void.specifier:VoidISOutputFormatSpecifier",
             "to-void-od=wai.annotations.format.void.specifier:VoidODOutputFormatSpecifier",
