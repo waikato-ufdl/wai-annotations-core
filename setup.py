@@ -52,10 +52,12 @@ setup(
         "console_scripts": ["wai-annotations=wai.annotations.main:sys_main"],
         "wai.annotations.plugins": [
             # Formats
+            "from-audio-files-ac=wai.annotations.format.audio.specifier:AudioACInputFormatSpecifier",
             "from-audio-files-sp=wai.annotations.format.audio.specifier:AudioSPInputFormatSpecifier",
             "from-images-ic=wai.annotations.format.image.specifier:ImagesICInputFormatSpecifier",
             "from-images-is=wai.annotations.format.image.specifier:ImagesISInputFormatSpecifier",
             "from-images-od=wai.annotations.format.image.specifier:ImagesODInputFormatSpecifier",
+            "to-audio-files-ac=wai.annotations.format.audio.specifier:AudioACOutputFormatSpecifier",
             "to-audio-files-sp=wai.annotations.format.audio.specifier:AudioSPOutputFormatSpecifier",
             "to-images-ic=wai.annotations.format.image.specifier:ImagesICOutputFormatSpecifier",
             "to-images-is=wai.annotations.format.image.specifier:ImagesISOutputFormatSpecifier",

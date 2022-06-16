@@ -295,6 +295,32 @@ optional arguments:
                         the data type that the value represents, available options: bool|numeric|string (default: None)
 ```
 
+### FROM-AUDIO-FILES-AC
+Dummy reader that turns audio files into a classification dataset.
+
+#### Domain(s):
+- **Audio classification domain**
+
+#### Options:
+```
+usage: from-audio-files-ac [-I FILENAME] [-i FILENAME] [-N FILENAME] [-n FILENAME] [-o FILENAME]
+                           [--seed SEED]
+
+optional arguments:
+  -I FILENAME, --inputs-file FILENAME
+                        Files containing lists of input files (can use glob syntax) (default: [])
+  -i FILENAME, --input FILENAME
+                        Input files (can use glob syntax) (default: [])
+  -N FILENAME, --negatives-file FILENAME
+                        Files containing lists of negative files (can use glob syntax) (default: [])
+  -n FILENAME, --negative FILENAME
+                        Files that have no annotations (can use glob syntax) (default: [])
+  -o FILENAME, --output-file FILENAME
+                        optional file to write read filenames into (default: None)
+  --seed SEED           the seed to use for randomisation (default: None)
+```
+
+
 ### FROM-AUDIO-FILES-SP
 Dummy reader that turns audio files into a speech dataset.
 
@@ -538,6 +564,22 @@ ISP which removes annotations from instances
 
       usage: strip-annotations
 ```
+
+### TO-AUDIO-FILES-AC
+Dummy writer that just outputs audio files from classification datasets.
+
+#### Domain(s):
+- **Audio classification domain**
+
+#### Options:
+```
+usage: to-audio-files-ac [-o OUTPUT_DIR]
+
+optional arguments:
+  -o OUTPUT_DIR, --output-dir OUTPUT_DIR
+                        the directory to write the audio files to (default: .)
+```
+
 
 ### TO-AUDIO-FILES-SP
 Dummy writer that just outputs audio files from speech datasets.
