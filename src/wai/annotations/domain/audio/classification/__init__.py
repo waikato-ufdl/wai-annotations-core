@@ -1,2 +1,2 @@
-from ._ClassificationDomainSpecifier import ClassificationDomainSpecifier
-from ._ClassificationInstance import ClassificationInstance
+from ._AudioClassificationDomainSpecifier import AudioClassificationDomainSpecifier
+from ._AudioClassificationInstance import AudioClassificationInstance

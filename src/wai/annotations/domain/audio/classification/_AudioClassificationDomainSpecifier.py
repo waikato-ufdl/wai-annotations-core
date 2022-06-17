@@ -2,7 +2,7 @@ from typing import Type
 
 from ....core.domain import DomainSpecifier
 from .._Audio import Audio
-from ._ClassificationInstance import ClassificationInstance
+from ._AudioClassificationInstance import AudioClassificationInstance
 from ...classification import Classification
 
 DESCRIPTION = """Transcriptions of recorded speech.
@@ -12,7 +12,7 @@ contents of the audio. Instances in this domain are an audio file and a string c
 """
 
 
-class ClassificationDomainSpecifier(DomainSpecifier[Audio, Classification]):
+class AudioClassificationDomainSpecifier(DomainSpecifier[Audio, Classification]):
     """
     Domain specifier for audio recordings annotated with a label.
     """
@@ -33,5 +33,5 @@ class ClassificationDomainSpecifier(DomainSpecifier[Audio, Classification]):
         return Classification
 
     @classmethod
-    def instance_type(cls) -> Type[ClassificationInstance]:
-        return ClassificationInstance
+    def instance_type(cls) -> Type[AudioClassificationInstance]:
+        return AudioClassificationInstance

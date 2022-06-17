@@ -4,7 +4,7 @@ from .._AudioInstance import AudioInstance
 from ...classification import Classification
 
 
-class ClassificationInstance(AudioInstance[Classification]):
+class AudioClassificationInstance(AudioInstance[Classification]):
     """
     An instance in the audio classification domain.
     """

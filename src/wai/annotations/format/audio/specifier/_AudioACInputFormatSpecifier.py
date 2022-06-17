@@ -21,5 +21,5 @@ class AudioACInputFormatSpecifier(SourceStageSpecifier):
 
     @classmethod
     def domain(cls) -> Type[DomainSpecifier]:
-        from wai.annotations.domain.audio.classification import ClassificationDomainSpecifier
-        return ClassificationDomainSpecifier
+        from wai.annotations.domain.audio.classification import AudioClassificationDomainSpecifier
+        return AudioClassificationDomainSpecifier
