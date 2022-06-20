@@ -48,7 +48,7 @@ setup(
         "wai.pycocotools",
         "opencv-python",
         "librosa",
-        "pysoundfile",
+        "soundfile",
     ],
     entry_points={
         "console_scripts": ["wai-annotations=wai.annotations.main:sys_main"],
