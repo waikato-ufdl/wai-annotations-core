@@ -33,7 +33,7 @@ setup(
         "wai",
         "wai.annotations"
     ],
-    version="0.1.7",
+    version="0.1.8",
     author='Corey Sterling',
     author_email='coreytsterling@gmail.com',
     install_requires=[
@@ -47,6 +47,8 @@ setup(
         "scikit-image",
         "wai.pycocotools",
         "opencv-python",
+        "librosa",
+        "pysoundfile",
     ],
     entry_points={
         "console_scripts": ["wai-annotations=wai.annotations.main:sys_main"],
