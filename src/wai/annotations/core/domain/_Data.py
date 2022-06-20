@@ -67,11 +67,11 @@ class Data(LoggingEnabled):
         :return:        Whether the file was written or not.
         """
         # Can't write anything without data
-        if self._data is None:
+        if self.data is None:
             return False
 
         # Write the data to disk
         with open(os.path.join(path, self._filename), "wb") as file:
-            file.write(self._data)
+            file.write(self.data)
 
         return True
