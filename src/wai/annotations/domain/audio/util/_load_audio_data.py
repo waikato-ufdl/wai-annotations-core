@@ -20,6 +20,6 @@ def load_audio_data(data: bytes, audio_format: AudioFormat, sample_rate: int = N
         with open(filename_tmp, "wb") as fp:
             fp.write(data)
             fp.close()
-        return librosa.load(filename_tmp, sr=sample_rate)
+        return librosa.load(filename_tmp, sr=sample_rate, mono=False)
     else:
-        return librosa.load(data, sr=sample_rate)
+        return librosa.load(data, sr=sample_rate, mono=False)
