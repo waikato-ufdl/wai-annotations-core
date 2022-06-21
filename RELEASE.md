@@ -17,9 +17,9 @@ Preparation:
 Commands for releasing on pypi (requires twine >= 1.8.0):
 
 ```
-  rm -r dist src/wai.annotations.core.egg-info
-  python setup.py clean sdist
-  twine upload dist/*
+rm -r dist src/wai.annotations.core.egg-info
+python setup.py clean sdist
+twine upload dist/*
 ```
 
 
