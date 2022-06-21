@@ -8,6 +8,7 @@ Changelog
 - Added dataset reader for audio files: `from-audio-files-sp`, `from-audio-files-ac`
 - Added dataset writer for audio files: `to-audio-files-sp`, `to-audio-files-ac`
 - Added dummy sink for audio files: `to-void-ac`
+- Added ISP for selecting a sub-sample from the stream: `sample`
 
 
 0.1.7 (2022-06-13)

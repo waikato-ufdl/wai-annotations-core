@@ -84,6 +84,7 @@ setup(
             "passthrough=wai.annotations.isp.passthrough.specifier:PassThroughISPSpecifier",
             "polygon-discarder=wai.annotations.isp.polygon_discarder.specifier:PolygonDiscarderISPSpecifier",
             "remove-classes=wai.annotations.isp.remove_classes.specifier:RemoveClassesISPSpecifier",
+            "sample=wai.annotations.isp.sample.specifier:SampleISPSpecifier",
             "strip-annotations=wai.annotations.isp.strip_annotations.specifier:StripAnnotationsISPSpecifier",
 
             # XDCs

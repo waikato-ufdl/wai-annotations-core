@@ -546,6 +546,30 @@ Removes classes from classification/image-segmentation instances
                         the classes to remove
 ```
 
+
+### SAMPLE
+ISP that selects a subset from the stream.
+
+#### Domain(s):
+- **Audio classification domain**
+- **Speech Domain**
+- **Image Object-Detection Domain**
+- **Image Classification Domain**
+- **Image Segmentation Domain**
+
+#### Options:
+```
+usage: sample [-s SEED] [-T THRESHOLD]
+
+optional arguments:
+  -s SEED, --seed SEED  the seed value to use for the random number generator; randomly seeded if
+                        not provided (default: None)
+  -T THRESHOLD, --threshold THRESHOLD
+                        the threshold to use for Random.rand(): if equal or above, sample gets
+                        selected; range: 0-1; default: 0 (= always) (default: 0.0)
+```
+
+
 ### STRIP-ANNOTATIONS
 ISP which removes annotations from instances
 
