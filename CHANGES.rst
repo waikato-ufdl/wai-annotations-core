@@ -2,7 +2,7 @@ Changelog
 =========
 
 0.1.8 (2022-06-21)
------------------
+------------------
 
 - Added new audio domain for classification using suffix `-ac`
 - Added dataset reader for audio files: `from-audio-files-sp`, `from-audio-files-ac`
