@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1.8 (???-??-??)
+0.1.8 (2022-06-21)
 -----------------
 
 - Added new audio domain for classification using suffix `-ac`
