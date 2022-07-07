@@ -11,7 +11,8 @@ class FilterLabelsISPSpecifier(ProcessorStageSpecifier):
     """
     @classmethod
     def description(cls) -> str:
-        return "Filters detected objects down to those with specified labels."
+        return "Filters detected objects down to those with specified labels or, "\
+               "in case of image classification, removes the label if it doesn't match."
 
     @classmethod
     def domain_transfer_function(
@@ -19,12 +20,16 @@ class FilterLabelsISPSpecifier(ProcessorStageSpecifier):
             input_domain: Type[DomainSpecifier]
     ) -> Type[DomainSpecifier]:
         from ....domain.image.object_detection import ImageObjectDetectionDomainSpecifier
+        from ....domain.image.classification import ImageClassificationDomainSpecifier
         if input_domain is ImageObjectDetectionDomainSpecifier:
             return ImageObjectDetectionDomainSpecifier
+        elif input_domain is ImageClassificationDomainSpecifier:
+            return ImageClassificationDomainSpecifier
         else:
             raise Exception(
                 f"FilterLabels only handles the "
-                f"{ImageObjectDetectionDomainSpecifier.name()} domain"
+                f"{ImageObjectDetectionDomainSpecifier.name()}, "
+                f"{ImageClassificationDomainSpecifier.name()} domains"
             )
 
     @classmethod

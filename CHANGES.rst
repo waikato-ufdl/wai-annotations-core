@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.1.9 (????-??-??)
+------------------
+
+- FilterLabels ISP now treats elements as negative ones if no labels left after
+  filtering (in order to use `discard-negatives` in pipeline); also works on
+  image classification domain now as well
+
+
 0.1.8 (2022-06-21)
 ------------------
 

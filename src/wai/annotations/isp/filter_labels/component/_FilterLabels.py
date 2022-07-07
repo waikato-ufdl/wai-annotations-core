@@ -2,19 +2,21 @@ from re import compile
 from typing import Pattern, Optional, List
 
 from wai.common.adams.imaging.locateobjects import LocatedObjects, LocatedObject
-from wai.common.cli.options import TypedOption
+from wai.common.cli.options import TypedOption, FlagOption
 
 from ....core.component import ProcessorComponent
 from ....core.stream import ThenFunction, DoneFunction
 from ....core.stream.util import RequiresNoFinalisation
 from ....core.util import InstanceState
+from ....domain.image import ImageInstance
 from ....domain.image.object_detection import ImageObjectDetectionInstance
+from ....domain.image.classification import ImageClassificationInstance
 from ....domain.image.object_detection.util import get_object_label
 
 
 class FilterLabels(
     RequiresNoFinalisation,
-    ProcessorComponent[ImageObjectDetectionInstance, ImageObjectDetectionInstance]
+    ProcessorComponent[ImageInstance, ImageInstance]
 ):
     """
     Processes a stream of image object-detection instances,
@@ -39,12 +41,24 @@ class FilterLabels(
 
     def process_element(
             self,
-            element: ImageObjectDetectionInstance,
-            then: ThenFunction[ImageObjectDetectionInstance],
+            element: ImageInstance,
+            then: ThenFunction[ImageInstance],
             done: DoneFunction
     ):
-        # Use the options to filter the located objects by label
-        self.remove_invalid_objects(element.annotations)
+        if isinstance(element, ImageObjectDetectionInstance):
+            # Use the options to filter the located objects by label
+            self.remove_invalid_objects(element.annotations)
+            # no annotations left? mark as negative
+            if len(element.annotations) == 0:
+                new_element = type(element)(element.data, None)
+                then(new_element)
+                return
+        elif isinstance(element, ImageClassificationInstance):
+            # mark as negative if label doesn't match
+            if not self.filter_label(element.annotations.label):
+                new_element = type(element)(element.data, None)
+                then(new_element)
+                return
 
         then(element)
 
