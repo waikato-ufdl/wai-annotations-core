@@ -1,5 +1,14 @@
 import logging
+import os
 from typing import Optional
+
+# numba drowns out the output in the console with its debug messages
+# to alleviate this, its logging level gets set to WARNING by default
+# can be changed via WAIANN_NUMBA_LOGLEVEL environment variable
+try:
+    logging.getLogger('numba').setLevel(level=os.getenv("WAIANN_NUMBA_LOGLEVEL", logging.WARNING))
+except:
+    logging.getLogger('numba').setLevel(level=logging.WARNING)
 
 
 class LoggingEnabled:

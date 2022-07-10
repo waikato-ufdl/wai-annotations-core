@@ -7,6 +7,7 @@ Changelog
 - FilterLabels ISP now treats elements as negative ones if no labels left after
   filtering (in order to use `discard-negatives` in pipeline); also works on
   image classification domain now as well
+- `logging._LoggingEnabled` module now sets the *numba* logging level to `WARNING`
 
 
 0.1.8 (2022-06-21)
