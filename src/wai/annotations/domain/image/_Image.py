@@ -1,4 +1,5 @@
 import io
+import os
 from typing import Optional, Tuple
 
 from PIL import Image as PILImage
@@ -55,14 +56,14 @@ class Image(Data):
         # If it's the same format, just make a copy
         if to_format is self._format:
             return Image(
-                self.filename,
+                os.path.join(self.path, self.filename),
                 self.data,
                 self.format,
                 self.size
             )
 
         return Image(
-            to_format.replace_extension(self.filename),
+            os.path.join(self.path, to_format.replace_extension(self.filename)),
             convert_image_format(self.data, to_format.pil_format_string) if self.data is not None else None,
             to_format,
             self.size

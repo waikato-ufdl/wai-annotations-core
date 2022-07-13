@@ -11,6 +11,7 @@ class Data(LoggingEnabled):
     items in that domain, e.g. image files for the image domain.
     """
     def __init__(self, filename: str, data: Optional[bytes] = None):
+        self._path: str = os.path.dirname(filename)
         self._filename: str = os.path.basename(filename)
         self._data: Optional[bytes] = data
 
@@ -20,6 +21,13 @@ class Data(LoggingEnabled):
         The filename of the file.
         """
         return self._filename
+
+    @property
+    def path(self) -> str:
+        """
+        The path of the file.
+        """
+        return self._path
 
     @property
     def data(self) -> Optional[bytes]:
