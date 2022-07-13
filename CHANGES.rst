@@ -7,6 +7,10 @@ Changelog
 - FilterLabels ISP now treats elements as negative ones if no labels left after
   filtering (in order to use `discard-negatives` in pipeline); also works on
   image classification domain now as well
+- FilterLabels ISP can filter out located objects that don't fall within a certain
+  region (x,y,w,h - normalized or absolute) using a supplied IoU threshold; useful
+  when concentrating on annotations in the center of an image, e.g., for images
+  generated with the subimages ISP (object detection domain only)
 - `logging._LoggingEnabled` module now sets the *numba* logging level to `WARNING`
 - `core.domain.Data` class now stores the path of the file as well
 - Rename ISP allows renaming of files, e.g., for disambiguating across batches
