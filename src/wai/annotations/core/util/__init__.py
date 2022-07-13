@@ -11,4 +11,4 @@ from ._read_file_list import read_file_list
 from ._recursive_iglob import recursive_iglob
 from ._ReentrantContextManager import ReentrantContextManager
 from ._WeakIdentityKeyDictionary import WeakIdentityKeyDictionary
-from ._polygons import UNION, INTERSECT, COMBINATIONS, to_polygons, intersect_over_union
+from ._polygons import UNION, INTERSECT, COMBINATIONS, to_polygon, to_polygons, intersect_over_union

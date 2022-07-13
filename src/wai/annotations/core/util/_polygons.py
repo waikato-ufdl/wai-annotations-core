@@ -9,6 +9,21 @@ COMBINATIONS = [
 ]
 
 
+def to_polygon(located_object):
+    """
+    Turns the located object into a shapely polygon.
+
+    :param located_object: the object to convert
+    :type located_object: LocatedObject
+    :return: the polygon
+    :rtype: Polygon
+    """
+    coords = []
+    for point in located_object.get_polygon().points:
+        coords.append((point.x, point.y))
+    return (Polygon(coords))
+
+
 def to_polygons(located_objects):
     """
     Turns the located objects into shapely polygons.
@@ -20,10 +35,7 @@ def to_polygons(located_objects):
     """
     result = []
     for obj in located_objects:
-        coords = []
-        for point in obj.get_polygon().points:
-            coords.append((point.x, point.y))
-        result.append(Polygon(coords))
+        result.append(to_polygon(obj))
     return result
 
 
