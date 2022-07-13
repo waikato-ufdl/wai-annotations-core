@@ -8,6 +8,8 @@ Changelog
   filtering (in order to use `discard-negatives` in pipeline); also works on
   image classification domain now as well
 - `logging._LoggingEnabled` module now sets the *numba* logging level to `WARNING`
+- `core.domain.Data` class now stores the path of the file as well
+- Rename ISP allows renaming of files, e.g., for disambiguating across batches
 
 
 0.1.8 (2022-06-21)
