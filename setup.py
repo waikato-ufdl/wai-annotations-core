@@ -33,7 +33,7 @@ setup(
         "wai",
         "wai.annotations"
     ],
-    version="0.1.8",
+    version="0.1.9",
     author='Corey Sterling',
     author_email='coreytsterling@gmail.com',
     install_requires=[
@@ -48,6 +48,7 @@ setup(
         "wai.pycocotools",
         "opencv-python",
         "librosa",
+        "Shapely",
         "soundfile",
     ],
     entry_points={
