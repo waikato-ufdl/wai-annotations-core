@@ -59,7 +59,8 @@ class Splitter(object):
     Based on code from wai.annotations.core.util.SplitSink
     """
 
-    def __init__(self, names: List[str], ratios: List[int], file_names: List[str], regexp: str = None, groups: List[int] = None, verbose:bool = False):
+    def __init__(self, names: List[str], ratios: List[int], file_names: List[str], regexp: str = None,
+                 groups: List[int] = None, verbose: bool = False):
         """
         Initializes the splitter with the names/ratios of the splits.
 
@@ -147,6 +148,10 @@ class Splitter(object):
         units = {}
         for file_name in self.file_names:
             res = re.search(self.regexp, file_name)
+            if res is None:
+                if self.verbose:
+                    get_app_logger().warning("No regexp match: %s/%s" % (self.regexp, file_name))
+                continue
             group_str = ""
             for i in range(len(self.groups)):
                 if i > 0:

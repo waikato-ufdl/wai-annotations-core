@@ -14,6 +14,8 @@ Changelog
 - `logging._LoggingEnabled` module now sets the *numba* logging level to `WARNING`
 - `core.domain.Data` class now stores the path of the file as well
 - Rename ISP allows renaming of files, e.g., for disambiguating across batches
+- `batch_split.Splitter` now handles cases when the regexp does not produce any matches
+  (and outputs a warning when in verbose mode)
 
 
 0.1.8 (2022-06-21)
