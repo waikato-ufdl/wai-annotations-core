@@ -12,6 +12,7 @@ Changelog
   when concentrating on annotations in the center of an image, e.g., for images
   generated with the subimages ISP (object detection domain only)
 - `logging._LoggingEnabled` module now sets the *numba* logging level to `WARNING`
+- `logging._LoggingEnabled` module now sets the *shapely* logging level to `WARNING`
 - `core.domain.Data` class now stores the path of the file as well
 - Rename ISP allows renaming of files, e.g., for disambiguating across batches
 - `batch_split.Splitter` now handles cases when the regexp does not produce any matches

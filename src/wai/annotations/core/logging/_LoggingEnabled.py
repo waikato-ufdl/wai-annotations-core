@@ -30,6 +30,12 @@ adjust_logging_level("matplotlib", logging.WARNING, "WAIANN_MATPLOTLIB_LOGLEVEL"
 # can be changed via WAIANN_NUMBA_LOGLEVEL environment variable
 adjust_logging_level("numba", logging.WARNING, "WAIANN_NUMBA_LOGLEVEL")
 
+# shapely outputs some unnecessary debug messages as well
+# to suppress them, its logging level gets set to WARNING by default
+# can be changed via WAIANN_SHAPELY_LOGLEVEL environment variable
+adjust_logging_level("shapely", logging.WARNING, "WAIANN_SHAPELY_LOGLEVEL")
+adjust_logging_level("shapely.geos", logging.WARNING, "WAIANN_SHAPELY_LOGLEVEL")
+
 
 class LoggingEnabled:
     """
