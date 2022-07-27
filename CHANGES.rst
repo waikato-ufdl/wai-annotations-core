@@ -16,6 +16,8 @@ Changelog
 - Rename ISP allows renaming of files, e.g., for disambiguating across batches
 - `batch_split.Splitter` now handles cases when the regexp does not produce any matches
   (and outputs a warning when in verbose mode)
+- Added LabelPresent ISP, which skips object detection images that do not have specified
+  labels (or if annotations do not overlap with defined regions; can be inverted).
 
 
 0.1.8 (2022-06-21)

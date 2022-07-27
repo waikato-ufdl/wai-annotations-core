@@ -81,6 +81,7 @@ setup(
             "check-duplicate-filenames=wai.annotations.isp.duplicate_filenames.specifier:DuplicateFileNamesISPSpecifier",
             "filter-labels=wai.annotations.isp.filter_labels.specifier:FilterLabelsISPSpecifier",
             "filter-metadata=wai.annotations.isp.filter_metadata.specifier:FilterMetadataISPSpecifier",
+            "label-present=wai.annotations.isp.label_present.specifier:LabelPresentISPSpecifier",
             "map-labels=wai.annotations.isp.map_labels.specifier:MapLabelsISPSpecifier",
             "passthrough=wai.annotations.isp.passthrough.specifier:PassThroughISPSpecifier",
             "polygon-discarder=wai.annotations.isp.polygon_discarder.specifier:PolygonDiscarderISPSpecifier",
