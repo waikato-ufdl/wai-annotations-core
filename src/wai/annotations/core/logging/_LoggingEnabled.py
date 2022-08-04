@@ -20,21 +20,15 @@ def adjust_logging_level(logger_name, default_level, env_var):
         logging.getLogger(logger_name).setLevel(level=default_level)
 
 
-# matplotlib outputs a lot of debugging info (fonts, etc)
-# to alleviate this, its logging level gets set to WARNING by default
-# can be changed via WAIANN_MATPLOTLIB_LOGLEVEL environment variable
+# Below are some libraries that have their default log levels set to DEBUG which is not helpful
+# Hence, these have their default levels changed to WARNING
+adjust_logging_level("h5py", logging.WARNING, "WAIANN_H5PY_LOGLEVEL")
+adjust_logging_level("h5py._conv", logging.WARNING, "WAIANN_H5PY_LOGLEVEL")
 adjust_logging_level("matplotlib", logging.WARNING, "WAIANN_MATPLOTLIB_LOGLEVEL")
-
-# numba drowns out the output in the console with its debug messages
-# to alleviate this, its logging level gets set to WARNING by default
-# can be changed via WAIANN_NUMBA_LOGLEVEL environment variable
 adjust_logging_level("numba", logging.WARNING, "WAIANN_NUMBA_LOGLEVEL")
-
-# shapely outputs some unnecessary debug messages as well
-# to suppress them, its logging level gets set to WARNING by default
-# can be changed via WAIANN_SHAPELY_LOGLEVEL environment variable
 adjust_logging_level("shapely", logging.WARNING, "WAIANN_SHAPELY_LOGLEVEL")
 adjust_logging_level("shapely.geos", logging.WARNING, "WAIANN_SHAPELY_LOGLEVEL")
+adjust_logging_level("tensorflow", logging.WARNING, "WAIANN_TF_LOGLEVEL")
 
 
 class LoggingEnabled:
