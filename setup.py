@@ -72,6 +72,7 @@ setup(
             "to-void-sp=wai.annotations.format.void.specifier:VoidSPOutputFormatSpecifier",
 
             # ISPs
+            "clean-transcript=wai.annotations.isp.clean_transcript.specifier:CleanTranscriptISPSpecifier",
             "coerce-box=wai.annotations.isp.coercions.specifier:BoxBoundsCoercionISPSpecifier",
             "coerce-mask=wai.annotations.isp.coercions.specifier:MaskBoundsCoercionISPSpecifier",
             "convert-image-format=wai.annotations.isp.convert_image_format.specifier:ConvertImageFormatISPSpecifier",

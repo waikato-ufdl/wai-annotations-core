@@ -21,6 +21,7 @@ Changelog
   labels (or if annotations do not overlap with defined regions; can be inverted).
 - Using wai.common==0.0.40 now to avoid parse error output when accessing `poly_x`/`poly_y`
   meta-data in `LocatedObject` instances when containing empty strings.
+- The CleanTranscript ISP can be used to clean up speech transcripts.
 
 
 0.1.8 (2022-06-21)
