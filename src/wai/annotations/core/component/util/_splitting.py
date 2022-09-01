@@ -173,8 +173,8 @@ class SplitSink(SinkComponent[ElementType], ABC):
 
         return tuple(
             split_name
-            for split_name, split_indices in split_indices_by_name.items()
             for index in schedule_range
+            for split_name, split_indices in split_indices_by_name.items()
             if index in split_indices
         )
 
