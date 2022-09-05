@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1.9 (????-??-??)
+0.1.9 (2022-09-05)
 ------------------
 
 - FilterLabels ISP now treats elements as negative ones if no labels left after

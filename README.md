@@ -133,6 +133,31 @@ Causes the conversion stream to halt when multiple dataset items have the same f
       usage: check-duplicate-filenames
 ```
 
+
+### CLEAN-TRANSCRIPT
+ISP that cleans speech transcripts.
+
+#### Domain(s):
+- **Speech Domain**
+
+#### Options:
+```
+usage: clean-transcript [-b] [-c CUSTOM] [-a] [-l] [-n] [-p] [-q] [--verbose]
+
+optional arguments:
+  -b, --brackets        removes brackets: ()[]{}〈〉 (default: False)
+  -c CUSTOM, --custom CUSTOM
+                        the custom characters to remove (default: )
+  -a, --non-alpha-numeric
+                        removes all characters that are not alpha-numeric (default: False)
+  -l, --non-letters     removes all characters that are not letters (default: False)
+  -n, --numeric         removes all numeric characters (default: False)
+  -p, --punctuation     removes punctuation characters: :;,.!? (default: False)
+  -q, --quotes          removes quotes: '"‘’“”‹›«» (default: False)
+  --verbose             outputs information about processed transcripts (default: False)
+```
+
+
 ### COERCE-BOX
 Converts all annotation bounds into box regions
 
@@ -422,6 +447,40 @@ optional arguments:
 ```
 
 
+### LABEL-PRESENT
+Keeps or discards images depending on whether annotations with certain label(s) are present. Checks can be further tightened by defining regions in the image that annotations must overlap with (or not overlap at all).
+
+#### Domain(s):
+- **Image Object-Detection Domain**
+
+#### Options:
+```
+usage: label-present [--coordinate-separator CHAR] [--invert-regions] [-l LABELS [LABELS ...]]
+                     [--min-iou FLOAT] [--pair-separator CHAR] [-r regexp]
+                     [--region [x,y[;x,y[;...]] [x,y[;x,y[;...]] ...]]] [--verbose]
+
+optional arguments:
+  --coordinate-separator CHAR
+                        the separator between coordinates (default: ;)
+  --invert-regions      Inverts the matching sense from 'labels have to overlap at least one of the
+                        region(s)' to 'labels cannot overlap any region' (default: False)
+  -l LABELS [LABELS ...], --labels LABELS [LABELS ...]
+                        explicit list of labels to check (default: [])
+  --min-iou FLOAT       the minimum IoU (intersect over union) that the object must have with the
+                        region(s) in order to be considered an overlap (object detection only)
+                        (default: 0.01)
+  --pair-separator CHAR
+                        the separator between the x and y of a pair (default: ,)
+  -r regexp, --regexp regexp
+                        regular expression for using only a subset of labels (default: None)
+  --region [x,y[;x,y[;...]] [x,y[;x,y[;...]] ...]]
+                        semicolon-separated list of comma-separated x/y pairs defining the region
+                        that the object must overlap with in order to be included. Values between
+                        0-1 are considered normalized, otherwise absolute pixels. (default: None)
+  --verbose             Outputs some debugging information (default: False)
+```
+
+
 ### MAP-LABELS
 Maps object-detection labels from one set to another
 
@@ -545,6 +604,33 @@ Removes classes from classification/image-segmentation instances
         -c CLASS [CLASS ...], --classes CLASS [CLASS ...]
                         the classes to remove
 ```
+
+
+### RENAME
+ISP that renames files.
+
+#### Domain(s):
+- **Audio classification domain**
+- **Speech Domain**
+- **Image Segmentation Domain**
+- **Image Object-Detection Domain**
+- **Image Classification Domain**
+
+#### Options:
+```
+usage: rename [-f NAME_FORMAT] [--verbose]
+
+optional arguments:
+  -f NAME_FORMAT, --name-format NAME_FORMAT
+                        the format for the new name. Available placeholders: - {name}: the name of
+                        the file, without path or extension. - {ext}: the extension of the file
+                        (incl dot). - {occurrences}: the number of times this name (excl extension)
+                        has been encountered. - {count}: the number of files encountered so far. -
+                        {[p]+dir}: the parent directory of the file: 'p': immediate parent, the more
+                        the p's the higher up in the hierarchy. (default: {name}{ext})
+  --verbose             outputs information about generated names (default: False)
+```
+
 
 
 ### SAMPLE
