@@ -7,11 +7,11 @@ from ....core.specifier import ProcessorStageSpecifier
 
 class CleanTranscriptISPSpecifier(ProcessorStageSpecifier):
     """
-    ISP that cleans a speech transcript files.
+    ISP that cleans speech transcripts.
     """
     @classmethod
     def description(cls) -> str:
-        return "ISP that cleans a speech transcript files."
+        return "ISP that cleans speech transcripts."
 
     @classmethod
     def domain_transfer_function(
