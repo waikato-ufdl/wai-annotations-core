@@ -23,7 +23,8 @@ Changelog
   meta-data in `LocatedObject` instances when containing empty strings.
 - The CleanTranscript ISP can be used to clean up speech transcripts.
 - Bug fix for splitting where split-scheduling was calculated with swapped iteration order,
-  leading to runs of splits rather than desired interleaving.
+  leading to runs of splits rather than desired interleaving. Added --no-interleave flag to
+  re-enable bug for backwards compatibility.
 
 
 0.1.8 (2022-06-21)

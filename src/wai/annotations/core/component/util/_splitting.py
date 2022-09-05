@@ -6,7 +6,7 @@ from contextlib2 import ExitStack
 
 from wai.bynning.operations import split as bynning_split_op
 
-from wai.common.cli.options import TypedOption
+from wai.common.cli.options import TypedOption, FlagOption
 
 from ...stream.util import ProcessState
 from ...util import InstanceState, StateType, ReentrantContextManager, gcd
@@ -34,6 +34,11 @@ class SplitSink(SinkComponent[ElementType], ABC):
         metavar="RATIO",
         nargs="+",
         help="the ratios to use for the splits"
+    )
+
+    no_interleave = FlagOption(
+        "--no-interleave",
+        help="disables item interleaving (splitting will occur in runs)"
     )
 
     def start(self):
@@ -170,6 +175,15 @@ class SplitSink(SinkComponent[ElementType], ABC):
             for split_name, split_indices
             in bynning_split_op(schedule_range, **self.split_table).items()
         }
+
+        # Enables the buggy non-interleaved behaviour (for backwards compatibility)
+        if self.no_interleave:
+            return tuple(
+                split_name
+                for split_name, split_indices in split_indices_by_name.items()  # This line...
+                for index in schedule_range                                     # ...is swapped with this line
+                if index in split_indices
+            )
 
         return tuple(
             split_name
