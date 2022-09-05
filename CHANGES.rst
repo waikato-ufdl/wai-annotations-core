@@ -22,6 +22,8 @@ Changelog
 - Using wai.common==0.0.40 now to avoid parse error output when accessing `poly_x`/`poly_y`
   meta-data in `LocatedObject` instances when containing empty strings.
 - The CleanTranscript ISP can be used to clean up speech transcripts.
+- Bug fix for splitting where split-scheduling was calculated with swapped iteration order,
+  leading to runs of splits rather than desired interleaving.
 
 
 0.1.8 (2022-06-21)
