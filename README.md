@@ -754,7 +754,7 @@ optional arguments:
 ```
 
 ### TO-VOID-AC
-Consumes instances without writing them.
+Consumes audio classification instances without writing them.
 
 #### Domain(s):
 - **Audio classification domain**
@@ -766,7 +766,7 @@ usage: to-void-ac
 
 
 ### TO-VOID-IC
-Consumes instances without writing them.
+Consumes image classification instances without writing them.
 
 #### Domain(s)
 - Image Classification Domain
@@ -782,7 +782,7 @@ Consumes instances without writing them.
 ```
 
 ### TO-VOID-IS
-Consumes instances without writing them.
+Consumes image segmentation instances without writing them.
 
 #### Domain(s)
 - Image Segmentation Domain
@@ -798,7 +798,7 @@ Consumes instances without writing them.
 ```
 
 ### TO-VOID-OD
-Consumes instances without writing them.
+Consumes object detection instances without writing them.
 
 #### Domain(s)
 - Image Object-Detection Domain
@@ -814,7 +814,7 @@ Consumes instances without writing them.
 ```
 
 ### TO-VOID-SP
-Consumes instances without writing them.
+Consumes speech instances without writing them.
 
 #### Domain(s)
 - Speech Domain

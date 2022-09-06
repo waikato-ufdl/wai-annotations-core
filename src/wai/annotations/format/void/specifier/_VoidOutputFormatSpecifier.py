@@ -10,10 +10,6 @@ class VoidOutputFormatSpecifier(SinkStageSpecifier, ABC):
     Base specifier for the void-writer in each known domain.
     """
     @classmethod
-    def description(cls) -> str:
-        return "Consumes instances without writing them."
-
-    @classmethod
     def components(cls) -> Tuple[Type[Component], ...]:
         from ..component import VoidWriter
         return VoidWriter,

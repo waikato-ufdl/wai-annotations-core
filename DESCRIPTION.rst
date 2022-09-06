@@ -43,8 +43,8 @@ The following sinks are available:
 * `to-images-ic`: dummy writer that just outputs images from image classification datasets.
 * `to-images-is`: dummy writer that just outputs images from image segmentation datasets.
 * `to-images-od`: dummy writer that just outputs images from object detection datasets.
-* `to-void-ac`: consumes instances without writing them.
-* `to-void-ic`: consumes instances without writing them.
-* `to-void-is`: consumes instances without writing them.
+* `to-void-ac`: consumes audio classification instances without writing them.
+* `to-void-ic`: consumes image classification instances without writing them.
+* `to-void-is`: consumes image segmentation instances without writing them.
 * `to-void-od`: consumes instances without writing them.
 * `to-void-sp`: consumes instances without writing them.
