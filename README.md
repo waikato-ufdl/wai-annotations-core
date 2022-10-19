@@ -828,3 +828,23 @@ Consumes speech instances without writing them.
 
       usage: to-void-sp
 ```
+
+### WRITE-LABELS
+ISP which gathers labels and writes them to disk
+
+#### Domain(s):
+- **Image Segmentation Domain**
+- **Image Object-Detection Domain**
+- **Image Classification Domain**
+- **Audio classification domain**
+
+#### Options:
+```
+usage: write-labels [-f {csv,csv-headless,list,json,json-pretty}] -o FILENAME
+
+optional arguments:
+  -f {csv,csv-headless,list,json,json-pretty}, --format {csv,csv-headless,list,json,json-pretty}
+  -o FILENAME, --output FILENAME
+                        the file into which to write the labels (default: None)
+```
+

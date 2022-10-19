@@ -33,7 +33,7 @@ setup(
         "wai",
         "wai.annotations"
     ],
-    version="0.2.0",
+    version="0.2.1",
     author='Corey Sterling',
     author_email='coreytsterling@gmail.com',
     install_requires=[
@@ -90,6 +90,7 @@ setup(
             "rename=wai.annotations.isp.rename.specifier:RenameISPSpecifier",
             "sample=wai.annotations.isp.sample.specifier:SampleISPSpecifier",
             "strip-annotations=wai.annotations.isp.strip_annotations.specifier:StripAnnotationsISPSpecifier",
+            "write-labels=wai.annotations.isp.write_labels.specifier:WriteLabelsISPSpecifier",
 
             # XDCs
             "od-to-is=wai.annotations.xdc.od_to_is.specifier:OD2ISXDCSpecifier",

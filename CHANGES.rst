@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.2.1 (2022-10-20)
+------------------
+
+- Added WriteLabels ISP which can read labels from classification, object-detection
+  and image-segmentation streams, and writes them to disk.
+
 0.2.0 (2022-09-06)
 ------------------
 
