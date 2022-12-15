@@ -117,22 +117,18 @@ optional arguments:
 ### CHECK-DUPLICATE-FILENAMES
 Causes the conversion stream to halt when multiple dataset items have the same filename
 
-#### Domain(s)
-- Speech Domain
-- Image Segmentation Domain
-- Image Object-Detection Domain
-- Image Classification Domain
+#### Domain(s):
+- **Image Object-Detection Domain**
+- **Audio classification domain**
+- **Speech Domain**
+- **Image Classification Domain**
+- **Spectrum Classification Domain**
+- **Image Segmentation Domain**
 
-#### Options
+#### Options:
 ```
-    CHECK-DUPLICATE-FILENAMES:
-      Causes the conversion stream to halt when multiple dataset items have the same filename
-
-      Domain(s): Speech Domain, Image Segmentation Domain, Image Object-Detection Domain, Image Classification Domain
-
-      usage: check-duplicate-filenames
+usage: check-duplicate-filenames
 ```
-
 
 ### CLEAN-TRANSCRIPT
 ISP that cleans speech transcripts.
@@ -157,98 +153,77 @@ optional arguments:
   --verbose             outputs information about processed transcripts (default: False)
 ```
 
-
 ### COERCE-BOX
 Converts all annotation bounds into box regions
 
-#### Domain(s)
-- Image Object-Detection Domain
+#### Domain(s):
+- **Image Object-Detection Domain**
 
-#### Options
+#### Options:
 ```
-    COERCE-BOX:
-      Converts all annotation bounds into box regions
-
-      Domain(s): Image Object-Detection Domain
-
-      usage: coerce-box
+usage: coerce-box
 ```
 
 ### COERCE-MASK
 Converts all annotation bounds into polygon regions
 
-#### Domain(s)
-- Image Object-Detection Domain
+#### Domain(s):
+- **Image Object-Detection Domain**
 
-#### Options
+#### Options:
 ```
-    COERCE-MASK:
-      Converts all annotation bounds into polygon regions
-
-      Domain(s): Image Object-Detection Domain
-
-      usage: coerce-mask
+usage: coerce-mask
 ```
 
 ### CONVERT-IMAGE-FORMAT
 Converts images from one format to another
 
-#### Domain(s)
-- Image Segmentation Domain
-- Image Object-Detection Domain
-- Image Classification Domain
+#### Domain(s):
+- **Image Object-Detection Domain**
+- **Image Segmentation Domain**
+- **Image Classification Domain**
 
-#### Options
+#### Options:
 ```
-    CONVERT-IMAGE-FORMAT:
-      Converts images from one format to another
+usage: convert-image-format -f FORMAT
 
-      Domain(s): Image Segmentation Domain, Image Object-Detection Domain, Image Classification Domain
-
-      usage: convert-image-format -f FORMAT
-
-      optional arguments:
-        -f FORMAT, --format FORMAT
-                        format to convert images to
+optional arguments:
+  -f FORMAT, --format FORMAT
+                        format to convert images to (default: None)
 ```
 
 ### DIMENSION-DISCARDER
 Removes annotations which fall outside certain size constraints
 
-#### Domain(s)
-- Image Object-Detection Domain
+#### Domain(s):
+- **Image Object-Detection Domain**
 
-#### Options
+#### Options:
 ```
-    DIMENSION-DISCARDER:
-      Removes annotations which fall outside certain size constraints
+usage: dimension-discarder [--max-area MAX_AREA] [--max-height MAX_HEIGHT] [--max-width MAX_WIDTH]
+                           [--min-area MIN_AREA] [--min-height MIN_HEIGHT] [--min-width MIN_WIDTH]
+                           [--verbose]
 
-      Domain(s): Image Object-Detection Domain
-
-      usage: dimension-discarder [--max-area MAX_AREA] [--max-height MAX_HEIGHT] [--max-width MAX_WIDTH] [--min-area MIN_AREA] [--min-height MIN_HEIGHT] [--min-width MIN_WIDTH] [--verbose]
-
-      optional arguments:
-        --max-area MAX_AREA
-                        the maximum area of annotations to convert
-        --max-height MAX_HEIGHT
-                        the maximum height of annotations to convert
-        --max-width MAX_WIDTH
-                        the maximum width of annotations to convert
-        --min-area MIN_AREA
-                        the minimum area of annotations to convert
-        --min-height MIN_HEIGHT
-                        the minimum height of annotations to convert
-        --min-width MIN_WIDTH
-                        the minimum width of annotations to convert
-        --verbose       outputs information when discarding annotations
+optional arguments:
+  --max-area MAX_AREA   the maximum area of annotations to convert (default: None)
+  --max-height MAX_HEIGHT
+                        the maximum height of annotations to convert (default: None)
+  --max-width MAX_WIDTH
+                        the maximum width of annotations to convert (default: None)
+  --min-area MIN_AREA   the minimum area of annotations to convert (default: None)
+  --min-height MIN_HEIGHT
+                        the minimum height of annotations to convert (default: None)
+  --min-width MIN_WIDTH
+                        the minimum width of annotations to convert (default: None)
+  --verbose             outputs information when discarding annotations (default: False)
 ```
 
 ### DISCARD-INVALID-IMAGES
 Discards images that cannot be loaded (e.g., corrupt image file or annotations with no image)
 
 #### Domain(s):
-- **Image Segmentation Domain**
 - **Image Object-Detection Domain**
+- **Image Segmentation Domain**
 - **Image Classification Domain**
 
 #### Options:
@@ -256,51 +231,48 @@ Discards images that cannot be loaded (e.g., corrupt image file or annotations w
 usage: discard-invalid-images [-v]
 
 optional arguments:
-  -v, --verbose  whether to output debugging information
+  -v, --verbose  whether to output debugging information (default: False)
 ```
-
 
 ### DISCARD-NEGATIVES
 Discards negative examples (those without annotations) from the stream
 
-#### Domain(s)
-- Speech Domain
-- Image Segmentation Domain
-- Image Object-Detection Domain
-- Image Classification Domain
+#### Domain(s):
+- **Image Object-Detection Domain**
+- **Audio classification domain**
+- **Speech Domain**
+- **Image Classification Domain**
+- **Spectrum Classification Domain**
+- **Image Segmentation Domain**
 
-#### Options
+#### Options:
 ```
-    DISCARD-NEGATIVES:
-      Discards negative examples (those without annotations) from the stream
-
-      Domain(s): Speech Domain, Image Segmentation Domain, Image Object-Detection Domain, Image Classification Domain
-
-      usage: discard-negatives
+usage: discard-negatives
 ```
 
 ### FILTER-LABELS
-Filters detected objects down to those with specified labels.
+Filters detected objects down to those with specified labels or, in case of image classification, removes the label if it doesn't match.
 
-#### Domain(s)
-- Image Object-Detection Domain
+#### Domain(s):
+- **Image Object-Detection Domain**
+- **Image Classification Domain**
 
-#### Options
+#### Options:
 ```
-    FILTER-LABELS:
-      Filters detected objects down to those with specified labels.
+usage: filter-labels [-l LABELS [LABELS ...]] [--min-iou FLOAT] [-r regexp] [--region x,y,w,h]
 
-      Domain(s): Image Object-Detection Domain
-
-      usage: filter-labels [-l LABELS [LABELS ...]] [-r regexp]
-
-      optional arguments:
-        -l LABELS [LABELS ...], --labels LABELS [LABELS ...]
-                        labels to use
-        -r regexp, --regexp regexp
-                        regular expression for using only a subset of labels
+optional arguments:
+  -l LABELS [LABELS ...], --labels LABELS [LABELS ...]
+                        labels to use (default: [])
+  --min-iou FLOAT       the minimum IoU (intersect over union) that the object must have with the
+                        region in order to be considered an overlap (object detection only)
+                        (default: 0.01)
+  -r regexp, --regexp regexp
+                        regular expression for using only a subset of labels (default: None)
+  --region x,y,w,h      region that the object must overlap with in order to be included (object
+                        detection only). Between 0-1 the values are considered normalized, otherwise
+                        absolute pixels. (default: None)
 ```
-
 
 ### FILTER-METADATA
 Filters detected objects based on their meta-data.
@@ -314,10 +286,14 @@ usage: filter-metadata [-c COMPARISON] [-k KEY] [-t VALUE_TYPE]
 
 optional arguments:
   -c COMPARISON, --comparison COMPARISON
-                        the comparison to apply to the value: for bool/numeric/string '=OTHER' and '!=OTHER' can be used, for numeric furthermore '<OTHER', '<=OTHER', '>=OTHER', '>OTHER'. E.g.: '<3.0' for numeric types will discard any annotations that have a value of 3.0 or larger (default: None)
+                        the comparison to apply to the value: for bool/numeric/string '=OTHER' and
+                        '!=OTHER' can be used, for numeric furthermore '<OTHER', '<=OTHER',
+                        '>=OTHER', '>OTHER'. E.g.: '<3.0' for numeric types will discard any
+                        annotations that have a value of 3.0 or larger (default: None)
   -k KEY, --key KEY     the key of the meta-data value to use for the filtering (default: None)
   -t VALUE_TYPE, --value-type VALUE_TYPE
-                        the data type that the value represents, available options: bool|numeric|string (default: None)
+                        the data type that the value represents, available options:
+                        bool|numeric|string (default: None)
 ```
 
 ### FROM-AUDIO-FILES-AC
@@ -345,7 +321,6 @@ optional arguments:
   --seed SEED           the seed to use for randomisation (default: None)
 ```
 
-
 ### FROM-AUDIO-FILES-SP
 Dummy reader that turns audio files into a speech dataset.
 
@@ -355,7 +330,7 @@ Dummy reader that turns audio files into a speech dataset.
 #### Options:
 ```
 usage: from-audio-files-sp [-I FILENAME] [-i FILENAME] [-N FILENAME] [-n FILENAME] [-o FILENAME]
-                          [--seed SEED]
+                           [--seed SEED]
 
 optional arguments:
   -I FILENAME, --inputs-file FILENAME
@@ -371,7 +346,6 @@ optional arguments:
   --seed SEED           the seed to use for randomisation (default: None)
 ```
 
-
 ### FROM-IMAGES-IC
 Dummy reader that turns images into an image classification dataset.
 
@@ -380,22 +354,22 @@ Dummy reader that turns images into an image classification dataset.
 
 #### Options:
 ```
-usage: from-images-ic [-I FILENAME] [-i FILENAME] [-N FILENAME] [-n FILENAME] [-o FILENAME] [--seed SEED]
+usage: from-images-ic [-I FILENAME] [-i FILENAME] [-N FILENAME] [-n FILENAME] [-o FILENAME]
+                      [--seed SEED]
 
 optional arguments:
   -I FILENAME, --inputs-file FILENAME
-                        Files containing lists of input files (can use glob syntax)
+                        Files containing lists of input files (can use glob syntax) (default: [])
   -i FILENAME, --input FILENAME
-                        Input files (can use glob syntax)
+                        Input files (can use glob syntax) (default: [])
   -N FILENAME, --negatives-file FILENAME
-                        Files containing lists of negative files (can use glob syntax)
+                        Files containing lists of negative files (can use glob syntax) (default: [])
   -n FILENAME, --negative FILENAME
-                        Files that have no annotations (can use glob syntax)
+                        Files that have no annotations (can use glob syntax) (default: [])
   -o FILENAME, --output-file FILENAME
-                        optional file to write read filenames into
-  --seed SEED           the seed to use for randomisation
+                        optional file to write read filenames into (default: None)
+  --seed SEED           the seed to use for randomisation (default: None)
 ```
-
 
 ### FROM-IMAGES-IS
 Dummy reader that turns images into an image segmentation dataset.
@@ -405,22 +379,22 @@ Dummy reader that turns images into an image segmentation dataset.
 
 #### Options:
 ```
-usage: from-images-is [-I FILENAME] [-i FILENAME] [-N FILENAME] [-n FILENAME] [-o FILENAME] [--seed SEED]
+usage: from-images-is [-I FILENAME] [-i FILENAME] [-N FILENAME] [-n FILENAME] [-o FILENAME]
+                      [--seed SEED]
 
 optional arguments:
   -I FILENAME, --inputs-file FILENAME
-                        Files containing lists of input files (can use glob syntax)
+                        Files containing lists of input files (can use glob syntax) (default: [])
   -i FILENAME, --input FILENAME
-                        Input files (can use glob syntax)
+                        Input files (can use glob syntax) (default: [])
   -N FILENAME, --negatives-file FILENAME
-                        Files containing lists of negative files (can use glob syntax)
+                        Files containing lists of negative files (can use glob syntax) (default: [])
   -n FILENAME, --negative FILENAME
-                        Files that have no annotations (can use glob syntax)
+                        Files that have no annotations (can use glob syntax) (default: [])
   -o FILENAME, --output-file FILENAME
-                        optional file to write read filenames into
-  --seed SEED           the seed to use for randomisation
+                        optional file to write read filenames into (default: None)
+  --seed SEED           the seed to use for randomisation (default: None)
 ```
-
 
 ### FROM-IMAGES-OD
 Dummy reader that turns images into an object detection dataset.
@@ -430,22 +404,47 @@ Dummy reader that turns images into an object detection dataset.
 
 #### Options:
 ```
-usage: from-images-od [-I FILENAME] [-i FILENAME] [-N FILENAME] [-n FILENAME] [-o FILENAME] [--seed SEED]
+usage: from-images-od [-I FILENAME] [-i FILENAME] [-N FILENAME] [-n FILENAME] [-o FILENAME]
+                      [--seed SEED]
 
 optional arguments:
   -I FILENAME, --inputs-file FILENAME
-                        Files containing lists of input files (can use glob syntax)
+                        Files containing lists of input files (can use glob syntax) (default: [])
   -i FILENAME, --input FILENAME
-                        Input files (can use glob syntax)
+                        Input files (can use glob syntax) (default: [])
   -N FILENAME, --negatives-file FILENAME
-                        Files containing lists of negative files (can use glob syntax)
+                        Files containing lists of negative files (can use glob syntax) (default: [])
   -n FILENAME, --negative FILENAME
-                        Files that have no annotations (can use glob syntax)
+                        Files that have no annotations (can use glob syntax) (default: [])
   -o FILENAME, --output-file FILENAME
-                        optional file to write read filenames into
-  --seed SEED           the seed to use for randomisation
+                        optional file to write read filenames into (default: None)
+  --seed SEED           the seed to use for randomisation (default: None)
 ```
 
+### FROM-SPECTRA-SC
+Dummy reader that turns spectra into a spectrum classification dataset.
+
+#### Domain(s):
+- **Spectrum Classification Domain**
+
+#### Options:
+```
+usage: from-spectra-sc [-I FILENAME] [-i FILENAME] [-N FILENAME] [-n FILENAME] [-o FILENAME]
+                       [--seed SEED]
+
+optional arguments:
+  -I FILENAME, --inputs-file FILENAME
+                        Files containing lists of input files (can use glob syntax) (default: [])
+  -i FILENAME, --input FILENAME
+                        Input files (can use glob syntax) (default: [])
+  -N FILENAME, --negatives-file FILENAME
+                        Files containing lists of negative files (can use glob syntax) (default: [])
+  -n FILENAME, --negative FILENAME
+                        Files that have no annotations (can use glob syntax) (default: [])
+  -o FILENAME, --output-file FILENAME
+                        optional file to write read filenames into (default: None)
+  --seed SEED           the seed to use for randomisation (default: None)
+```
 
 ### LABEL-PRESENT
 Keeps or discards images depending on whether annotations with certain label(s) are present. Checks can be further tightened by defining regions in the image that annotations must overlap with (or not overlap at all).
@@ -480,141 +479,116 @@ optional arguments:
   --verbose             Outputs some debugging information (default: False)
 ```
 
-
 ### MAP-LABELS
 Maps object-detection labels from one set to another
 
-#### Domain(s)
-- Image Object-Detection Domain
+#### Domain(s):
+- **Image Object-Detection Domain**
 
-#### Options
+#### Options:
 ```
-    MAP-LABELS:
-      Maps object-detection labels from one set to another
+usage: map-labels [-m old=new]
 
-      Domain(s): Image Object-Detection Domain
-
-      usage: map-labels [-m old=new]
-
-      optional arguments:
-        -m old=new, --mapping old=new
-                        mapping for labels, for replacing one label string with another (eg when fixing/collapsing labels)
+optional arguments:
+  -m old=new, --mapping old=new
+                        mapping for labels, for replacing one label string with another (eg when
+                        fixing/collapsing labels) (default: [])
 ```
 
 ### OD-TO-IC
 Converts image object-detection instances into image classification instances
 
-#### Domain(s)
-- Image Object-Detection Domain
+#### Domain(s):
+- **Image Object-Detection Domain**
 
-#### Options
+#### Options:
 ```
-    OD-TO-IC:
-      Converts image object-detection instances into image classification instances
+usage: od-to-ic [-m HANDLER]
 
-      Domain(s): Image Object-Detection Domain
-
-      usage: od-to-ic [-m HANDLER]
-
-      optional arguments:
-        -m HANDLER, --multiplicity HANDLER
-                        how to handle instances with more than one located object
+optional arguments:
+  -m HANDLER, --multiplicity HANDLER
+                        how to handle instances with more than one located object (default: error)
 ```
 
 ### OD-TO-IS
 Converts image object-detection instances into image segmentation instances
 
-#### Domain(s)
-- Image Object-Detection Domain
+#### Domain(s):
+- **Image Object-Detection Domain**
 
-#### Options
+#### Options:
 ```
-    OD-TO-IS:
-      Converts image object-detection instances into image segmentation instances
+usage: od-to-is [--label-error] --labels LABEL [LABEL ...]
 
-      Domain(s): Image Object-Detection Domain
-
-      usage: od-to-is [--label-error] --labels LABEL [LABEL ...]
-
-      optional arguments:
-        --label-error   whether to raise errors when an unspecified label is encountered (default is to ignore)
-        --labels LABEL [LABEL ...]
-                        specifies the labels for each index
+optional arguments:
+  --label-error         whether to raise errors when an unspecified label is encountered (default is
+                        to ignore) (default: False)
+  --labels LABEL [LABEL ...]
+                        specifies the labels for each index (default: None)
 ```
 
 ### PASSTHROUGH
 Dummy ISP which has no effect on the conversion stream
 
-#### Domain(s)
-- Speech Domain
-- Image Segmentation Domain
-- Image Object-Detection Domain
-- Image Classification Domain
+#### Domain(s):
+- **Image Object-Detection Domain**
+- **Audio classification domain**
+- **Speech Domain**
+- **Image Classification Domain**
+- **Spectrum Classification Domain**
+- **Image Segmentation Domain**
 
-#### Options
+#### Options:
 ```
-    PASSTHROUGH:
-      Dummy ISP which has no effect on the conversion stream
-
-      Domain(s): Speech Domain, Image Segmentation Domain, Image Object-Detection Domain, Image Classification Domain
-
-      usage: passthrough
+usage: passthrough
 ```
 
 ### POLYGON-DISCARDER
 Removes annotations with polygons which fall outside certain point limit constraints
 
-#### Domain(s)
-- Image Object-Detection Domain
+#### Domain(s):
+- **Image Object-Detection Domain**
 
-#### Options
+#### Options:
 ```
-    POLYGON-DISCARDER:
-      Removes annotations with polygons which fall outside certain point limit constraints
+usage: polygon-discarder [--max-points MAX_POINTS] [--min-points MIN_POINTS] [--verbose]
 
-      Domain(s): Image Object-Detection Domain
-
-      usage: polygon-discarder [--max-points MAX_POINTS] [--min-points MIN_POINTS] [--verbose]
-
-      optional arguments:
-        --max-points MAX_POINTS
-                        the maximum number of points in the polygon
-        --min-points MIN_POINTS
-                        the minimum number of points in the polygon
-        --verbose       outputs information when discarding annotations
+optional arguments:
+  --max-points MAX_POINTS
+                        the maximum number of points in the polygon (default: None)
+  --min-points MIN_POINTS
+                        the minimum number of points in the polygon (default: None)
+  --verbose             outputs information when discarding annotations (default: False)
 ```
 
 ### REMOVE-CLASSES
 Removes classes from classification/image-segmentation instances
 
-#### Domain(s)
-- Image Segmentation Domain
-- Image Classification Domain
+#### Domain(s):
+- **Spectrum Classification Domain**
+- **Image Segmentation Domain**
+- **Audio classification domain**
+- **Image Classification Domain**
 
-#### Options
+#### Options:
 ```
-    REMOVE-CLASSES:
-      Removes classes from classification/image-segmentation instances
+usage: remove-classes -c CLASS [CLASS ...]
 
-      Domain(s): Image Segmentation Domain, Image Classification Domain
-
-      usage: remove-classes -c CLASS [CLASS ...]
-
-      optional arguments:
-        -c CLASS [CLASS ...], --classes CLASS [CLASS ...]
-                        the classes to remove
+optional arguments:
+  -c CLASS [CLASS ...], --classes CLASS [CLASS ...]
+                        the classes to remove (default: None)
 ```
-
 
 ### RENAME
 ISP that renames files.
 
 #### Domain(s):
+- **Image Object-Detection Domain**
 - **Audio classification domain**
 - **Speech Domain**
-- **Image Segmentation Domain**
-- **Image Object-Detection Domain**
 - **Image Classification Domain**
+- **Spectrum Classification Domain**
+- **Image Segmentation Domain**
 
 #### Options:
 ```
@@ -631,16 +605,15 @@ optional arguments:
   --verbose             outputs information about generated names (default: False)
 ```
 
-
-
 ### SAMPLE
 ISP that selects a subset from the stream.
 
 #### Domain(s):
+- **Image Object-Detection Domain**
 - **Audio classification domain**
 - **Speech Domain**
-- **Image Object-Detection Domain**
 - **Image Classification Domain**
+- **Spectrum Classification Domain**
 - **Image Segmentation Domain**
 
 #### Options:
@@ -655,24 +628,20 @@ optional arguments:
                         selected; range: 0-1; default: 0 (= always) (default: 0.0)
 ```
 
-
 ### STRIP-ANNOTATIONS
 ISP which removes annotations from instances
 
-#### Domain(s)
-- Speech Domain
-- Image Segmentation Domain
-- Image Object-Detection Domain
-- Image Classification Domain
+#### Domain(s):
+- **Image Object-Detection Domain**
+- **Audio classification domain**
+- **Speech Domain**
+- **Image Classification Domain**
+- **Spectrum Classification Domain**
+- **Image Segmentation Domain**
 
-#### Options
+#### Options:
 ```
-    STRIP-ANNOTATIONS:
-      ISP which removes annotations from instances
-
-      Domain(s): Speech Domain, Image Segmentation Domain, Image Object-Detection Domain, Image Classification Domain
-
-      usage: strip-annotations
+usage: strip-annotations
 ```
 
 ### TO-AUDIO-FILES-AC
@@ -690,7 +659,6 @@ optional arguments:
                         the directory to write the audio files to (default: .)
 ```
 
-
 ### TO-AUDIO-FILES-SP
 Dummy writer that just outputs audio files from speech datasets.
 
@@ -699,13 +667,12 @@ Dummy writer that just outputs audio files from speech datasets.
 
 #### Options:
 ```
-usage: to-audio-fileS-sp [-o OUTPUT_DIR]
+usage: to-audio-files-sp [-o OUTPUT_DIR]
 
 optional arguments:
   -o OUTPUT_DIR, --output-dir OUTPUT_DIR
                         the directory to write the audio files to (default: .)
 ```
-
 
 ### TO-IMAGES-IC
 Dummy writer that just outputs images from image classification datasets.
@@ -719,7 +686,7 @@ usage: to-images-ic [-o OUTPUT_DIR]
 
 optional arguments:
   -o OUTPUT_DIR, --output-dir OUTPUT_DIR
-                        the directory to write the images to
+                        the directory to write the images to (default: .)
 ```
 
 ### TO-IMAGES-IS
@@ -734,9 +701,8 @@ usage: to-images-is [-o OUTPUT_DIR]
 
 optional arguments:
   -o OUTPUT_DIR, --output-dir OUTPUT_DIR
-                        the directory to write the images to
+                        the directory to write the images to (default: .)
 ```
-
 
 ### TO-IMAGES-OD
 Dummy writer that just outputs images from object detection datasets.
@@ -750,7 +716,22 @@ usage: to-images-od [-o OUTPUT_DIR]
 
 optional arguments:
   -o OUTPUT_DIR, --output-dir OUTPUT_DIR
-                        the directory to write the images to
+                        the directory to write the images to (default: .)
+```
+
+### TO-SPECTRA-SC
+Dummy writer that just outputs spectra from spectrum classification datasets.
+
+#### Domain(s):
+- **Spectrum Classification Domain**
+
+#### Options:
+```
+usage: to-spectra-sc [-o OUTPUT_DIR]
+
+optional arguments:
+  -o OUTPUT_DIR, --output-dir OUTPUT_DIR
+                        the directory to write the spectra to (default: .)
 ```
 
 ### TO-VOID-AC
@@ -764,79 +745,70 @@ Consumes audio classification instances without writing them.
 usage: to-void-ac
 ```
 
-
 ### TO-VOID-IC
 Consumes image classification instances without writing them.
 
-#### Domain(s)
-- Image Classification Domain
+#### Domain(s):
+- **Image Classification Domain**
 
-#### Options
+#### Options:
 ```
-    TO-VOID-IC:
-      Consumes instances without writing them.
-
-      Domain(s): Image Classification Domain
-
-      usage: to-void-ic
+usage: to-void-ic
 ```
 
 ### TO-VOID-IS
 Consumes image segmentation instances without writing them.
 
-#### Domain(s)
-- Image Segmentation Domain
+#### Domain(s):
+- **Image Segmentation Domain**
 
-#### Options
+#### Options:
 ```
-    TO-VOID-IS:
-      Consumes instances without writing them.
-
-      Domain(s): Image Segmentation Domain
-
-      usage: to-void-is
+usage: to-void-is
 ```
 
 ### TO-VOID-OD
 Consumes object detection instances without writing them.
 
-#### Domain(s)
-- Image Object-Detection Domain
+#### Domain(s):
+- **Image Object-Detection Domain**
 
-#### Options
+#### Options:
 ```
-    TO-VOID-OD:
-      Consumes instances without writing them.
+usage: to-void-od
+```
 
-      Domain(s): Image Object-Detection Domain
+### TO-VOID-SC
+Consumes spectrum classification instances without writing them.
 
-      usage: to-void-od
+#### Domain(s):
+- **Spectrum Classification Domain**
+
+#### Options:
+```
+usage: to-void-sc
 ```
 
 ### TO-VOID-SP
 Consumes speech instances without writing them.
 
-#### Domain(s)
-- Speech Domain
+#### Domain(s):
+- **Speech Domain**
 
-#### Options
+#### Options:
 ```
-    TO-VOID-SP:
-      Consumes instances without writing them.
-
-      Domain(s): Speech Domain
-
-      usage: to-void-sp
+usage: to-void-sp
 ```
 
 ### WRITE-LABELS
 ISP which gathers labels and writes them to disk
 
 #### Domain(s):
-- **Image Segmentation Domain**
 - **Image Object-Detection Domain**
-- **Image Classification Domain**
 - **Audio classification domain**
+- **Image Classification Domain**
+- **Spectrum Classification Domain**
+- **Image Segmentation Domain**
 
 #### Options:
 ```
@@ -847,4 +819,3 @@ optional arguments:
   -o FILENAME, --output FILENAME
                         the file into which to write the labels (default: None)
 ```
-

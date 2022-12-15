@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.2.2 (2022-12-16)
+------------------
+
+- Updated wai.common requirement to v0.0.41.
+- Added spectrum classification domain.
+- Bug/typo fixes.
+
 0.2.1 (2022-10-20)
 ------------------
 
