@@ -60,15 +60,18 @@ setup(
             "from-images-ic=wai.annotations.format.image.specifier:ImagesICInputFormatSpecifier",
             "from-images-is=wai.annotations.format.image.specifier:ImagesISInputFormatSpecifier",
             "from-images-od=wai.annotations.format.image.specifier:ImagesODInputFormatSpecifier",
+            "from-spectra-sc=wai.annotations.format.spectra.specifier:SpectraSCInputFormatSpecifier",
             "to-audio-files-ac=wai.annotations.format.audio.specifier:AudioACOutputFormatSpecifier",
             "to-audio-files-sp=wai.annotations.format.audio.specifier:AudioSPOutputFormatSpecifier",
             "to-images-ic=wai.annotations.format.image.specifier:ImagesICOutputFormatSpecifier",
             "to-images-is=wai.annotations.format.image.specifier:ImagesISOutputFormatSpecifier",
             "to-images-od=wai.annotations.format.image.specifier:ImagesODOutputFormatSpecifier",
+            "to-spectra-sc=wai.annotations.format.spectra.specifier:SpectraSCOutputFormatSpecifier",
             "to-void-ac=wai.annotations.format.void.specifier:VoidACOutputFormatSpecifier",
             "to-void-ic=wai.annotations.format.void.specifier:VoidICOutputFormatSpecifier",
             "to-void-is=wai.annotations.format.void.specifier:VoidISOutputFormatSpecifier",
             "to-void-od=wai.annotations.format.void.specifier:VoidODOutputFormatSpecifier",
+            "to-void-sc=wai.annotations.format.void.specifier:VoidSCOutputFormatSpecifier",
             "to-void-sp=wai.annotations.format.void.specifier:VoidSPOutputFormatSpecifier",
 
             # ISPs
