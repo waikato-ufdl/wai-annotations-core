@@ -65,9 +65,11 @@ class Pipeline:
             raise Exception("No sink")
         return self._sink
 
-    def process(self,
-                source: Optional[Iterable] = None,
-                sink: Optional[ThenFunction] = None):
+    def process(
+            self,
+            source: Optional[Iterable] = None,
+            sink: Optional[ThenFunction] = None
+    ) -> 'Pipeline':
         """
         Executes this pipeline.
 
@@ -115,8 +117,6 @@ class Pipeline:
         )
 
         # Execute the pipeline
-        try:
-            pipeline[0]()
-        finally:
-            # Tidy up all process state
-            reset_all_process_state(source, *self.processors, sink)
+        pipeline[0]()
+
+        return self

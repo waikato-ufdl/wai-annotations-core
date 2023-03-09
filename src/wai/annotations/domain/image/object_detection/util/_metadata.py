@@ -1,7 +1,7 @@
 """
 Module for working with meta-data on located objects.
 """
-from typing import Dict, Optional, TypeVar, Union
+from typing import Dict, Optional, TypeVar, Union, overload
 
 from wai.common.adams.imaging.locateobjects import LocatedObject
 from wai.common.adams.imaging.locateobjects import constants
@@ -45,9 +45,11 @@ def object_has_label(located_object: LocatedObject) -> bool:
     """
     return LABEL_METADATA_KEY in located_object.metadata
 
-
-def get_object_label(located_object: LocatedObject,
-                     default: DefaultType = DEFAULT_LABEL) -> Union[str, DefaultType]:
+@overload
+def get_object_label(located_object: LocatedObject) -> str: ...
+@overload
+def get_object_label(located_object: LocatedObject, default: DefaultType) -> Union[str, DefaultType]: ...
+def get_object_label(located_object, default = DEFAULT_LABEL):
     """
     Gets the label of a located object.
 

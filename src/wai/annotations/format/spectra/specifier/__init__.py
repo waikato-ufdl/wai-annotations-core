@@ -1,2 +1,0 @@
-from ._SpectraSCInputFormatSpecifier import SpectraSCInputFormatSpecifier
-from ._SpectraSCOutputFormatSpecifier import SpectraSCOutputFormatSpecifier

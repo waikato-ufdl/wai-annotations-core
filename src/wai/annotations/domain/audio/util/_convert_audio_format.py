@@ -1,7 +1,7 @@
+from io import BytesIO
 import numpy as np
 import soundfile
 
-from io import BytesIO
 from wai.annotations.domain.audio import AudioFormat
 
 

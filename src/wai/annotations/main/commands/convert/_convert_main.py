@@ -29,7 +29,7 @@ def convert_main(options: Optional[OptionsList] = None):
         options = sys.argv[1:]
 
     # Split the options into global and stage-specific
-    global_options, stage_options = ConversionPipelineBuilder.split_global_options(options)
+    global_options, stage_options = ConversionPipelineBuilder.split_options(options)
 
     # Consume global options
     try:
@@ -47,19 +47,23 @@ def convert_main(options: Optional[OptionsList] = None):
         print(convert_help())
         return
 
-    # If the last option is a call for help, provided help on the last stage
-    if stage_options[-1] in ("-h", "--help"):
+    # If the last option is a call for help, provide help on the last stage
+    if (
+            len(stage_options) > 0
+            and len(stage_options[-1][1]) > 0
+            and stage_options[-1][1][-1] in ("-h", "--help")
+    ):
         # Get the last stage
-        stage = ConversionPipelineBuilder.split_options(stage_options)[-1][0]
+        stage = stage_options[-1][0]
 
         # Set up options to format the help for the stage
-        stage_plugin_options = PluginsOptions(["-o", stage, "-g"])
+        stage_plugin_options = PluginsOptions(["-o", str(stage), "-g"])
 
         # Print the help and exit
         print(get_plugins_formatted(stage_plugin_options))
         return
 
-    # Perform macro expansion on the stage options
+    # Perform macro expansion on each stage's options
     stage_options = perform_macro_expansion(stage_options, convert_options.MACRO_FILE)
 
     # Create the conversion pipeline

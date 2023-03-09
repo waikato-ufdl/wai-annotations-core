@@ -4,11 +4,15 @@ import numpy as np
 import tempfile
 import time
 
-from typing import Tuple
+from typing import Optional, Tuple
 from wai.annotations.domain.audio import AudioFormat
 
 
-def _load_from_disk(data: bytes, audio_format: AudioFormat, sample_rate: int = None) -> Tuple[np.ndarray, int]:
+def _load_from_disk(
+        data: bytes,
+        audio_format: Optional[AudioFormat] = None,
+        sample_rate: Optional[int] = None
+) -> Tuple[np.ndarray, int]:
     """
     Dumps the data on disk in a temp file and loads it from there.
 
@@ -17,19 +21,31 @@ def _load_from_disk(data: bytes, audio_format: AudioFormat, sample_rate: int = N
     :param sample_rate: the sample rate to load the data with
     :return: tuple of audio time series and sample rate
     """
-    filename_tmp = os.path.join(tempfile.gettempdir(), "waiann-%d.%s" % (round(time.time()), audio_format.get_default_extension()))
+    extension = f".{audio_format.get_default_extension()}" if audio_format is not None else ""
+    filename_tmp = os.path.join(
+        tempfile.gettempdir(),
+        f"waiann-{round(time.time())}{extension}"
+    )
+
     with open(filename_tmp, "wb") as fp:
         fp.write(data)
         fp.close()
+
     data, sample_rate = librosa.load(filename_tmp, sr=sample_rate, mono=False)
+
     try:
         os.remove(filename_tmp)
     except:
         pass
+
     return data, sample_rate
 
 
-def load_audio_data(data: bytes, audio_format: AudioFormat, sample_rate: int = None) -> Tuple[np.ndarray, int]:
+def load_audio_data(
+        data: bytes,
+        audio_format: Optional[AudioFormat] = None,
+        sample_rate: Optional[int] = None
+) -> Tuple[np.ndarray, int]:
     """
     Loads the audio data from the file data.
 

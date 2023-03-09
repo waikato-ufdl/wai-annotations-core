@@ -1,10 +1,10 @@
 from typing import Dict, Type
 
-from ..specifier import StageSpecifier
+from .specifier import PluginSpecifier
 
 
 # A cache of loaded specifiers for plugins
-__cache: Dict[str, Type[StageSpecifier]] = {}
+__cache: Dict[str, Type[PluginSpecifier]] = {}
 
 
 def is_cached(name: str) -> bool:
@@ -17,7 +17,7 @@ def is_cached(name: str) -> bool:
     return name in __cache
 
 
-def get_cached(name: str) -> Type[StageSpecifier]:
+def get_cached(name: str) -> Type[PluginSpecifier]:
     """
     Gets a cached plugin specifier.
 
@@ -27,7 +27,7 @@ def get_cached(name: str) -> Type[StageSpecifier]:
     return __cache[name]
 
 
-def set_cache(name: str, specifier: Type[StageSpecifier]):
+def set_cache(name: str, specifier: Type[PluginSpecifier]):
     """
     Adds a specifier to the cache.
 

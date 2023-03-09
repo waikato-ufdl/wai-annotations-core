@@ -8,22 +8,22 @@ from wai.common.cli.options import TypedOption, FlagOption
 from ....core.component import ProcessorComponent
 from ....core.stream import ThenFunction, DoneFunction
 from ....core.stream.util import RequiresNoFinalisation
-from ....core.util import InstanceState
-from ....domain.image import ImageInstance
+from ....core.util import InstanceState, to_polygon, intersect_over_union
 from ....domain.image.object_detection import ImageObjectDetectionInstance
 from ....domain.image.object_detection.util import get_object_label
-from wai.annotations.core.util import to_polygon, intersect_over_union
 
 
 class LabelPresent(
     RequiresNoFinalisation,
-    ProcessorComponent[ImageInstance, ImageInstance]
+    ProcessorComponent[
+        ImageObjectDetectionInstance,
+        ImageObjectDetectionInstance
+    ]
 ):
     """
     Processes a stream of object-detection instances,
     marking images as negative if annotations don't match the criteria.
     """
-
     labels = TypedOption(
         "-l", "--labels",
         type=str,
@@ -83,7 +83,8 @@ class LabelPresent(
             done: DoneFunction
     ):
         # determines annotations that match criteria
-        indices = self.find_valid_objects(element.annotations, element.data.width, element.data.height)
+        # FIXME: What if element.annotation is None or element.data is None?
+        indices = self.find_valid_objects(element.annotation, element.data.width, element.data.height)
         if self.verbose:
             self.logger.info("indices: %s" % str(indices))
         if len(indices) > 0:

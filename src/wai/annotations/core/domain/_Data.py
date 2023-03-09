@@ -1,85 +1,36 @@
-import os
 from abc import abstractmethod
-from typing import Optional
+from typing import Type, TypeVar
 from ..logging import LoggingEnabled, get_library_root_logger
+
+
+SelfType = TypeVar('SelfType', bound="Data")
 
 
 class Data(LoggingEnabled):
     """
-    The base class for representing a single item in a data-set, without
-    its annotations. Should be sub-typed by specific domains to represent
-    items in that domain, e.g. image files for the image domain.
+    The base class for the independent data-type of items in a data-set
+    of a particular domain. Should be sub-typed by specific domains
+    to represent items in that domain, e.g. image files for image-based domains.
+    The only guarantees of the base-type is that the data-type has a binary
+    representation, and it can be instantiated from just that representation.
     """
-    def __init__(self, filename: str, data: Optional[bytes] = None):
-        self._path: str = os.path.dirname(filename)
-        self._filename: str = os.path.basename(filename)
-        self._data: Optional[bytes] = data
+    def __init__(self, data: bytes):
+        self._data: bytes = data
 
     @property
-    def filename(self) -> str:
-        """
-        The filename of the file.
-        """
-        return self._filename
-
-    @property
-    def path(self) -> str:
-        """
-        The path of the file.
-        """
-        return self._path
-
-    @property
-    def data(self) -> Optional[bytes]:
+    def data(self) -> bytes:
         """
         The binary contents of the file, if available.
         """
         return self._data
 
     @classmethod
-    def from_file(cls, filepath: str) -> 'Data':
-        """
-        Reads an item from disk.
-
-        :param filepath:    The file to read.
-        :return:            The file-info object.
-        """
-        # Try to read the data
-        data = None
-        if os.path.exists(filepath):
-            with open(filepath, "rb") as file:
-                data = file.read()
-        else:
-            get_library_root_logger().warning("Missing file, cannot read data: %s" % filepath)
-
-        return cls.from_file_data(filepath, data)
-
-    @classmethod
     @abstractmethod
-    def from_file_data(cls, file_name: str, file_data: bytes) -> 'Data':
+    def from_data(cls: Type[SelfType], file_data: bytes) -> SelfType:
         """
-        Creates an instance of this type from just the filename and
-        binary file data.
+        Creates an instance of this type from just the binary file data.
 
-        :param file_name:   The filename.
         :param file_data:   The file-data.
         :return:            A FileInfo instance.
         """
-        pass
-
-    def write_data_if_present(self, path: str) -> bool:
-        """
-        Writes the file data to disk under its filename in the given path.
-
-        :param path:    The directory to write the file into.
-        :return:        Whether the file was written or not.
-        """
-        # Can't write anything without data
-        if self.data is None:
-            return False
-
-        # Write the data to disk
-        with open(os.path.join(path, self._filename), "wb") as file:
-            file.write(self.data)
-
-        return True
+        raise NotImplementedError(cls.from_data.__qualname__)

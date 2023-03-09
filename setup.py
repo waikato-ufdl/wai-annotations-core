@@ -33,7 +33,7 @@ setup(
         "wai",
         "wai.annotations"
     ],
-    version="0.2.2",
+    version="0.3.0",
     author='Corey Sterling',
     author_email='coreytsterling@gmail.com',
     install_requires=[
@@ -51,30 +51,44 @@ setup(
         "Shapely",
         "soundfile",
     ],
+    tests_require=[
+        "wai.test"
+    ],
     entry_points={
         "console_scripts": ["wai-annotations=wai.annotations.main:sys_main"],
         "wai.annotations.plugins": [
+            # Domains
+            "ac=wai.annotations.domain.audio.classification:AudioClassificationDomainSpecifier",
+            "sp=wai.annotations.domain.audio.speech:SpeechDomainSpecifier",
+            "ic=wai.annotations.domain.image.classification:ImageClassificationDomainSpecifier",
+            "od=wai.annotations.domain.image.object_detection:ImageObjectDetectionDomainSpecifier",
+            "is=wai.annotations.domain.image.segmentation:ImageSegmentationDomainSpecifier",
+            "sc=wai.annotations.domain.spectra.classification:SpectrumClassificationDomainSpecifier",
+
+            # Stores
+            "dict-store=wai.annotations.core.store.specifier.specifiers:DictStoreSpecifier",
+            "local-file-store=wai.annotations.core.store.specifier.specifiers:LocalFileStoreSpecifier",
+
             # Formats
-            "from-audio-files-ac=wai.annotations.format.audio.specifier:AudioACInputFormatSpecifier",
-            "from-audio-files-sp=wai.annotations.format.audio.specifier:AudioSPInputFormatSpecifier",
-            "from-images-ic=wai.annotations.format.image.specifier:ImagesICInputFormatSpecifier",
-            "from-images-is=wai.annotations.format.image.specifier:ImagesISInputFormatSpecifier",
-            "from-images-od=wai.annotations.format.image.specifier:ImagesODInputFormatSpecifier",
-            "from-spectra-sc=wai.annotations.format.spectra.specifier:SpectraSCInputFormatSpecifier",
-            "to-audio-files-ac=wai.annotations.format.audio.specifier:AudioACOutputFormatSpecifier",
-            "to-audio-files-sp=wai.annotations.format.audio.specifier:AudioSPOutputFormatSpecifier",
-            "to-images-ic=wai.annotations.format.image.specifier:ImagesICOutputFormatSpecifier",
-            "to-images-is=wai.annotations.format.image.specifier:ImagesISOutputFormatSpecifier",
-            "to-images-od=wai.annotations.format.image.specifier:ImagesODOutputFormatSpecifier",
-            "to-spectra-sc=wai.annotations.format.spectra.specifier:SpectraSCOutputFormatSpecifier",
-            "to-void-ac=wai.annotations.format.void.specifier:VoidACOutputFormatSpecifier",
-            "to-void-ic=wai.annotations.format.void.specifier:VoidICOutputFormatSpecifier",
-            "to-void-is=wai.annotations.format.void.specifier:VoidISOutputFormatSpecifier",
-            "to-void-od=wai.annotations.format.void.specifier:VoidODOutputFormatSpecifier",
-            "to-void-sc=wai.annotations.format.void.specifier:VoidSCOutputFormatSpecifier",
-            "to-void-sp=wai.annotations.format.void.specifier:VoidSPOutputFormatSpecifier",
+            "from-data=wai.annotations.format.data.specifier:FromDataSpecifier",
+            "to-data=wai.annotations.format.data.specifier:ToDataSpecifier",
+            "to-void=wai.annotations.format.void.specifier:ToVoidSpecifier",
+            "from-audio-files-ac=wai.annotations.format.data.specifier:FromDataSpecifier",
+            "from-audio-files-sp=wai.annotations.format.data.specifier:FromDataSpecifier",
+            "from-images-ic=wai.annotations.format.data.specifier:FromDataSpecifier",
+            "from-images-is=wai.annotations.format.data.specifier:FromDataSpecifier",
+            "from-images-od=wai.annotations.format.data.specifier:FromDataSpecifier",
+            "from-spectra-sc=wai.annotations.format.data.specifier:FromDataSpecifier",
+            "to-audio-files-ac=wai.annotations.format.data.specifier:ToDataSpecifier",
+            "to-audio-files-sp=wai.annotations.format.data.specifier:ToDataSpecifier",
+            "to-images-ic=wai.annotations.format.data.specifier:ToDataSpecifier",
+            "to-images-is=wai.annotations.format.data.specifier:ToDataSpecifier",
+            "to-images-od=wai.annotations.format.data.specifier:ToDataSpecifier",
+            "to-spectra-sc=wai.annotations.format.data.specifier:ToDataSpecifier",
 
             # ISPs
+            "check-duplicate-filenames=wai.annotations.isp.check_duplicate_keys.specifier:CheckDuplicateKeysISPSpecifier",
+            "check-duplicate-keys=wai.annotations.isp.check_duplicate_keys.specifier:CheckDuplicateKeysISPSpecifier",
             "clean-transcript=wai.annotations.isp.clean_transcript.specifier:CleanTranscriptISPSpecifier",
             "coerce-box=wai.annotations.isp.coercions.specifier:BoxBoundsCoercionISPSpecifier",
             "coerce-mask=wai.annotations.isp.coercions.specifier:MaskBoundsCoercionISPSpecifier",
@@ -82,7 +96,6 @@ setup(
             "dimension-discarder=wai.annotations.isp.dimension_discarder.specifier:DimensionDiscarderISPSpecifier",
             "discard-invalid-images=wai.annotations.isp.discard_invalid_images.specifier:DiscardInvalidImagesISPSpecifier",
             "discard-negatives=wai.annotations.isp.discard_negatives.specifier:DiscardNegativesISPSpecifier",
-            "check-duplicate-filenames=wai.annotations.isp.duplicate_filenames.specifier:DuplicateFileNamesISPSpecifier",
             "filter-labels=wai.annotations.isp.filter_labels.specifier:FilterLabelsISPSpecifier",
             "filter-metadata=wai.annotations.isp.filter_metadata.specifier:FilterMetadataISPSpecifier",
             "label-present=wai.annotations.isp.label_present.specifier:LabelPresentISPSpecifier",
@@ -96,8 +109,8 @@ setup(
             "write-labels=wai.annotations.isp.write_labels.specifier:WriteLabelsISPSpecifier",
 
             # XDCs
-            "od-to-is=wai.annotations.xdc.od_to_is.specifier:OD2ISXDCSpecifier",
-            "od-to-ic=wai.annotations.xdc.od_to_ic.specifier:OD2ICXDCSpecifier",
+            "od-into-ic=wai.annotations.xdc.od_to_ic.specifier:OD2ICXDCSpecifier",
+            "od-into-is=wai.annotations.xdc.od_to_is.specifier:OD2ISXDCSpecifier",
         ]
     }
 )

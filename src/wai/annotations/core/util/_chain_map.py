@@ -5,12 +5,15 @@ InputElementType = TypeVar("InputElementType")
 OutputElementType = TypeVar("OutputElementType")
 
 
-def chain_map(func: Callable[[InputElementType], Iterable[OutputElementType]],
-              iterable: Iterable[InputElementType]) -> Iterator[OutputElementType]:
+def chain_map(
+        func: Callable[[InputElementType], Iterable[OutputElementType]],
+        iterable: Iterable[InputElementType]
+) -> Iterator[OutputElementType]:
     """
-    Applies a mapping that produces an iterator per element of
+    Applies a mapping that produces an iterable per element of
     the input iterable, and chains the mapped iterators.
 
-    :return:    An iterator over the mapped elements.
+    :return:
+                An iterator over the mapped elements.
     """
     return itertools.chain.from_iterable(map(func, iterable))

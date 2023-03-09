@@ -1,24 +1,26 @@
 from re import compile
-from typing import Pattern, Optional, List
+from typing import Pattern, Optional, List, Union
 
 from shapely.geometry import Polygon
 from wai.common.adams.imaging.locateobjects import LocatedObjects, LocatedObject
 from wai.common.cli.options import TypedOption
 
 from ....core.component import ProcessorComponent
+from ....core.domain import Data, Instance
 from ....core.stream import ThenFunction, DoneFunction
 from ....core.stream.util import RequiresNoFinalisation
-from ....core.util import InstanceState
-from ....domain.image import ImageInstance
+from ....core.util import InstanceState, to_polygon, intersect_over_union
+from ....domain.classification import Classification
 from ....domain.image.object_detection import ImageObjectDetectionInstance
-from ....domain.image.classification import ImageClassificationInstance
 from ....domain.image.object_detection.util import get_object_label
-from wai.annotations.core.util import to_polygon, intersect_over_union
 
 
 class FilterLabels(
     RequiresNoFinalisation,
-    ProcessorComponent[ImageInstance, ImageInstance]
+    ProcessorComponent[
+        Union[Instance[Data, Classification], ImageObjectDetectionInstance],
+        Union[Instance[Data, Classification], ImageObjectDetectionInstance]
+    ]
 ):
     """
     Processes a stream of image object-detection instances,
@@ -53,30 +55,56 @@ class FilterLabels(
     # The compiled regex
     _pattern: Optional[Pattern] = InstanceState(lambda self: compile(self.regex) if self.regex is not None else None)
 
+    @InstanceState
+    def _region(self) -> Optional[List[float]]:
+        if self.region is None:
+            return None
+        else:
+            parts = self.region.split(",")
+            if len(parts) != 4:
+                raise Exception("Region must have format 'x,y,w,h', but found: %s" % self.region)
+            return [float(x) for x in parts]
+
+    @InstanceState
+    def _normalized(self) -> bool:
+        if self.region is None:
+            return False
+        else:
+            parts = self.region.split(",")
+            if len(parts) != 4:
+                raise Exception("Region must have format 'x,y,w,h', but found: %s" % self.region)
+            return sum([(0 if (x < 1) else 1) for x in self._region]) < 4
+
+
     def process_element(
             self,
-            element: ImageInstance,
-            then: ThenFunction[ImageInstance],
+            element: Union[Instance[Data, Classification], ImageObjectDetectionInstance],
+            then: ThenFunction[Union[Instance[Data, Classification], ImageObjectDetectionInstance]],
             done: DoneFunction
     ):
-        if isinstance(element, ImageObjectDetectionInstance):
+        if isinstance(element, ImageObjectDetectionInstance) and element.annotation is not None:
             # Use the options to filter the located objects by label
-            self.remove_invalid_objects(element.annotations, element.data.width, element.data.height)
+            self.remove_invalid_objects(
+                element.annotation,
+                element.data.width if element.data is not None else None,
+                element.data.height if element.data is not None else None
+            )
+
             # no annotations left? mark as negative
             if len(element.annotations) == 0:
-                new_element = type(element)(element.data, None)
+                new_element = element.from_parts(element.key, element.data, None)
                 then(new_element)
-                return
-        elif isinstance(element, ImageClassificationInstance):
+
+        elif element.annotation is not None:
             # mark as negative if label doesn't match
-            if not self.filter_label(element.annotations.label):
-                new_element = type(element)(element.data, None)
+            if not self.filter_label(element.annotation.label):
+                new_element = element.from_parts(element.key, element.data, None)
                 then(new_element)
-                return
 
-        then(element)
+        else:
+            then(element)
 
-    def remove_invalid_objects(self, located_objects: LocatedObjects, width: int, height: int):
+    def remove_invalid_objects(self, located_objects: LocatedObjects, width: Optional[int], height: Optional[int]):
         """
         Removes objects with labels that are not valid under the given options.
 
@@ -86,18 +114,6 @@ class FilterLabels(
         """
         # Create a list of objects to remove
         invalid_objects: List[int] = []
-
-        # parse region, if necessary
-        if not hasattr(self, "_region"):
-            if self.region is None:
-                self._region = None
-                self._normalized = False
-            else:
-                parts = self.region.split(",")
-                if len(parts) != 4:
-                    raise Exception("Region must have format 'x,y,w,h', but found: %s" % self.region)
-                self._region = [float(x) for x in parts]
-                self._normalized = sum([(0 if (x < 1) else 1) for x in self._region]) < 4
 
         # Search the located objects
         for index, located_object in enumerate(located_objects):
@@ -136,7 +152,7 @@ class FilterLabels(
         # Filter the label
         return self.filter_label(get_object_label(located_object))
 
-    def filter_region(self, located_object: LocatedObject, width: int, height: int) -> bool:
+    def filter_region(self, located_object: LocatedObject, width: Optional[int], height: Optional[int]) -> bool:
         """
         Ensures that the object fits into the defined region.
 
@@ -149,6 +165,8 @@ class FilterLabels(
             return True
 
         if self._normalized:
+            if width is None or height is None:
+                return True
             x = int(self._region[0] * width)
             y = int(self._region[1] * height)
             w = int(self._region[2] * width)

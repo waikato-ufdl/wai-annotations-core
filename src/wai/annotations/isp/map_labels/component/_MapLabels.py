@@ -1,19 +1,39 @@
-from typing import Optional, Dict
+from typing import Optional, Dict, Union
 
 from wai.common.adams.imaging.locateobjects import LocatedObjects
 from wai.common.cli.options import TypedOption
 
 from ....core.component import ProcessorComponent
+from ....core.domain import Data, Instance
 from ....core.stream import ThenFunction, DoneFunction
 from ....core.stream.util import RequiresNoFinalisation
 from ....core.util import InstanceState
-from ....domain.image.object_detection import ImageObjectDetectionInstance
+from ....domain.classification import Classification
+from ....domain.image.object_detection import DetectedObjects
 from ....domain.image.object_detection.util import get_object_label, set_object_label
 
 
+def _label_table_init(self: 'MapLabels') -> Dict[str, str]:
+    label_table = {}
+    for map_string in self.label_mapping:
+        old, new = map_string.split("=")
+
+        # Make sure we don't double-map a label
+        if old in label_table:
+            raise ValueError(
+                f"Multiple mappings specified for label '{old}': {label_table[old]}, {new}"
+            )
+
+        label_table[old] = new
+
+    return label_table
+
 class MapLabels(
     RequiresNoFinalisation,
-    ProcessorComponent[ImageObjectDetectionInstance, ImageObjectDetectionInstance]
+    ProcessorComponent[
+        Instance[Data, Union[Classification, DetectedObjects]],
+        Instance[Data, Union[Classification, DetectedObjects]]
+    ]
 ):
     """
     Processes a stream of object-detection instances, mapping labels
@@ -26,30 +46,31 @@ class MapLabels(
         help="mapping for labels, for replacing one label string with another (eg when fixing/collapsing labels)"
     )
 
-    @InstanceState
-    def label_table(self) -> Dict[str, str]:
-        label_table = {}
-        for map_string in self.label_mapping:
-            old, new = map_string.split("=")
-
-            # Make sure we don't double-map a label
-            if old in label_table:
-                raise ValueError(f"Multiple mappings specified for label '{old}': "
-                                 f"{label_table[old]}, {new}")
-
-            label_table[old] = new
-
-        return label_table
+    label_table: Dict[str, str] = InstanceState(_label_table_init)
 
     def process_element(
             self,
-            element: ImageObjectDetectionInstance,
-            then: ThenFunction[ImageObjectDetectionInstance],
+            element: Instance[Data, Union[Classification, DetectedObjects]],
+            then: ThenFunction[Instance[Data, Union[Classification, DetectedObjects]]],
             done: DoneFunction
     ):
-        # Apply the label mapping
-        self.apply_label_mapping(element.annotations)
+        # Get the annotation
+        annotation = element.annotation
 
+        # Can't map unannotated instances
+        if annotation is None:
+            then(element)
+
+        if isinstance(annotation, Classification):
+            then(
+                type(element).from_parts(
+                    element.key,
+                    element.data,
+                    Classification(self.label_table.get(annotation.label, annotation.label))
+                )
+            )
+
+        self.apply_label_mapping(annotation)
         then(element)
 
     def apply_label_mapping(self, located_objects: LocatedObjects):

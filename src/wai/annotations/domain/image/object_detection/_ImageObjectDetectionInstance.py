@@ -1,18 +1,25 @@
-from typing import Type
+from typing import Type, TypeVar
 
-from wai.common.adams.imaging.locateobjects import LocatedObjects
-
+from ....core.domain.specifier import DomainSpecifier
 from .._ImageInstance import ImageInstance
 from .util import render_annotations_onto_image
+from ._DetectedObjects import DetectedObjects
+
+SelfType = TypeVar("SelfType", bound='ImageObjectDetectionInstance')
 
 
-class ImageObjectDetectionInstance(ImageInstance[LocatedObjects]):
+class ImageObjectDetectionInstance(ImageInstance[DetectedObjects]):
     """
     Adds the _repr_png_ method dynamically to object-detection instances.
     """
     @classmethod
-    def annotations_type(cls) -> Type[LocatedObjects]:
-        return LocatedObjects
+    def annotation_type(cls) -> Type[DetectedObjects]:
+        return DetectedObjects
+
+    @classmethod
+    def domain_specifier(cls: Type[SelfType]) -> Type['DomainSpecifier[SelfType]']:
+        from ._ImageObjectDetectionDomainSpecifier import ImageObjectDetectionDomainSpecifier
+        return ImageObjectDetectionDomainSpecifier
 
     def __getattribute__(self, item):
         if item == '_repr_png_' and self.file_info.data is not None:

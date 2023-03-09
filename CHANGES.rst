@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.3.0 (202?-??-??)
+------------------
+
+- Large refactor introducing:
+  - Stores (included via plugin) for reading/writing data to arbitrary data-stores.
+  - Generic bounds for stages, allowing stages to read/write multiple domains.
+  - Unit-tests (with framework for downstream plugins).
+
 0.2.2 (2022-12-16)
 ------------------
 

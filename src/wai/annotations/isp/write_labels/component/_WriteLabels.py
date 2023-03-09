@@ -1,18 +1,19 @@
-from typing import Any, Callable, Dict, Optional, Set, Union
+from typing import Callable, Dict, Optional, Set, Union
 
 from wai.common.adams.imaging.locateobjects import LocatedObjects
 from wai.common.cli.options import TypedOption
 
 from ....core.component import ProcessorComponent
-from ....core.domain import Instance
+from ....core.domain import Data, Instance
 from ....core.stream import OutputElementType, ThenFunction, DoneFunction
 from ....core.stream.util import ProcessState
 from ....domain.classification import Classification
+from ....domain.image.object_detection import DetectedObjects
 from ....domain.image.object_detection.util import get_object_label
 from ....domain.image.segmentation import ImageSegmentationAnnotation
 
-AnnotationType = Union[Classification, LocatedObjects, ImageSegmentationAnnotation]
-InstanceType = Instance[Any, AnnotationType]
+AnnotationType = Union[Classification, DetectedObjects, ImageSegmentationAnnotation]
+InstanceType = Instance[Data, AnnotationType]
 
 
 def format_csv(labels: Set[str]) -> str:
@@ -79,7 +80,7 @@ class WriteLabels(
             done: DoneFunction
     ):
         # Get the annotation from the element
-        annotation: Optional[AnnotationType] = element.annotations
+        annotation: Optional[AnnotationType] = element.annotation
 
         # Extract the label from the annotation
         if annotation is None:

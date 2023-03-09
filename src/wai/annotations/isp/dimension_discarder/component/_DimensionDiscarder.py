@@ -2,14 +2,18 @@ from wai.common.adams.imaging.locateobjects import LocatedObjects, LocatedObject
 from wai.common.cli.options import TypedOption, FlagOption
 
 from ....core.component import ProcessorComponent
+from ....core.domain import Data, Instance
 from ....core.stream import ThenFunction, DoneFunction
 from ....core.stream.util import RequiresNoFinalisation
-from ....domain.image.object_detection import ImageObjectDetectionInstance
+from ....domain.image.object_detection import DetectedObjects, ImageObjectDetectionInstance
 
 
 class DimensionDiscarder(
     RequiresNoFinalisation,
-    ProcessorComponent[ImageObjectDetectionInstance, ImageObjectDetectionInstance]
+    ProcessorComponent[
+        Instance[Data, DetectedObjects],
+        Instance[Data, DetectedObjects]
+    ]
 ):
     """
     Stream processor which removes annotations which fall outside
@@ -58,19 +62,33 @@ class DimensionDiscarder(
 
     def process_element(
             self,
-            element: ImageObjectDetectionInstance,
-            then: ThenFunction[ImageObjectDetectionInstance],
+            element: Instance[Data, DetectedObjects],
+            then: ThenFunction[Instance[Data, DetectedObjects]],
             done: DoneFunction
     ):
         # Unpack the format
-        image_info, located_objects = element
+        located_objects = element.annotation
+
+        if located_objects is None:
+            then(element)
+            return
 
         # Create a new set of located objects with only non-zero-area annotations
-        located_objects = LocatedObjects((located_object
-                                          for located_object in located_objects
-                                          if not self._should_discard_located_object(located_object)))
+        located_objects = DetectedObjects(
+            (
+                located_object
+                for located_object in located_objects
+                if not self._should_discard_located_object(located_object)
+            )
+        )
 
-        then(ImageObjectDetectionInstance(image_info, located_objects))
+        then(
+            element.from_parts(
+                element.key,
+                element.data,
+                located_objects
+            )
+        )
 
     def _should_discard_located_object(self, located_object: LocatedObject) -> bool:
         """

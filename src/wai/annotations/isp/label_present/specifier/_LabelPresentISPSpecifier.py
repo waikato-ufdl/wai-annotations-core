@@ -1,14 +1,20 @@
 from typing import Type, Tuple
 
 from ....core.component import ProcessorComponent
-from ....core.domain import DomainSpecifier
-from ....core.specifier import ProcessorStageSpecifier
+from ....core.domain.specifier import DomainSpecifier
+from ....core.stage.bounds import InstanceTypeBoundRelationship
+from ....core.stage.specifier import ProcessorStageSpecifier
+from ....domain.image.object_detection import ImageObjectDetectionInstance
 
 
 class LabelPresentISPSpecifier(ProcessorStageSpecifier):
     """
     Specifies the labels-in-region ISP.
     """
+    @classmethod
+    def name(cls) -> str:
+        return "Label Present"
+
     @classmethod
     def description(cls) -> str:
         return "Keeps or discards images depending on whether annotations with certain label(s) are present. " \
@@ -29,6 +35,16 @@ class LabelPresentISPSpecifier(ProcessorStageSpecifier):
             )
 
     @classmethod
-    def components(cls) -> Tuple[Type[ProcessorComponent]]:
+    def bound_relationship(cls) -> InstanceTypeBoundRelationship:
+        return InstanceTypeBoundRelationship(
+            ImageObjectDetectionInstance,
+            ImageObjectDetectionInstance,
+            input_instance_type_must_match_output_instance_type=True,
+            output_instance_type_must_match_input_instance_type=True
+        )
+
+
+    @classmethod
+    def components(cls, bound_relationship: InstanceTypeBoundRelationship) -> Tuple[Type[ProcessorComponent]]:
         from ...label_present.component import LabelPresent
         return LabelPresent,

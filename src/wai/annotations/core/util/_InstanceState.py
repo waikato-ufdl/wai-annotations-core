@@ -1,9 +1,10 @@
-from typing import TypeVar, Generic, Callable, Any, Type
+from typing import TypeVar, Generic, Callable, Type, overload
 
 from ._WeakIdentityKeyDictionary import WeakIdentityKeyDictionary
 
 StateType = TypeVar("StateType")
 OwnerType = TypeVar("OwnerType")
+SelfType = TypeVar("SelfType")
 
 
 class InstanceState(Generic[StateType]):
@@ -22,7 +23,11 @@ class InstanceState(Generic[StateType]):
         # Nothing done with at bind-time
         pass
 
-    def __get__(self, instance: OwnerType, owner: Type[OwnerType]) -> StateType:
+    @overload
+    def __get__(self: SelfType, instance: OwnerType, owner: Type[OwnerType]) -> StateType: ...
+    @overload
+    def __get__(self: SelfType, instance: None, owner: Type[OwnerType]) -> SelfType: ...
+    def __get__(self, instance, owner):
         # If called on the owner class, return this descriptor
         if instance is None:
             return self

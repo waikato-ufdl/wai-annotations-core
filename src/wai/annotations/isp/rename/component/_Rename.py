@@ -1,17 +1,20 @@
 import os
+from typing import Dict
+
 from ....core.component import ProcessorComponent
 from ....core.domain import Instance
 from ....core.stream import ThenFunction, DoneFunction
-from ....core.stream.util import RequiresNoFinalisation
+from ....core.stream.util import ProcessState, RequiresNoFinalisation
 from wai.common.cli.options import TypedOption, FlagOption
 
+from ....core.util.path import PathKey, path_to_str
 
 PH_NAME = "{name}"
 PH_EXT = "{ext}"
 PH_OCCURRENCES = "{occurrences}"
 PH_COUNT = "{count}"
 PH_PDIR = "{[p]+dir}"
-PH_PDIR_SUFFIX = "pdir}"
+PH_PDIR_SUFFIX = "{pdir}"
 
 PH_LIST = [
     PH_NAME,
@@ -65,6 +68,10 @@ class Rename(
         help="outputs information about generated names"
     )
 
+    _count: int = ProcessState(lambda self: 0)
+
+    _occurrences: Dict[str, int] = ProcessState(lambda self: {})
+
     def _parent_dir(self, path: str, pattern: str) -> str:
         """
         Returns the parent directory that corresponds to the pdir pattern.
@@ -99,18 +106,13 @@ class Rename(
             then(element)
             return
 
-        path = element.data.path
-        name, ext = os.path.splitext(element.data.filename)
+        path, name = os.path.split(path_to_str(element.key))
+        name, ext = os.path.splitext(name)
 
         # increment counter
-        if not hasattr(self, "_count"):
-            self._count = 1
-        else:
-            self._count += 1
+        self._count += 1
 
         # occurrences
-        if not hasattr(self, "_occurrences"):
-            self._occurrences = {}
         if name not in self._occurrences:
             self._occurrences[name] = 1
         else:
@@ -137,6 +139,9 @@ class Rename(
         if self.verbose:
             self.logger.info("Result: %s -> %s" % (name, new_name))
 
-        new_data = type(element.data)(os.path.join(path, new_name), element.data.data)
-        new_element = type(element)(new_data, element.annotations)
+        new_element = type(element).from_parts(
+            PathKey(os.path.join(path, new_name)),
+            element.data,
+            element.annotation
+        )
         then(new_element)

@@ -1,12 +1,18 @@
 """
 Provides functions for working with macros.
 """
+from typing import List, Tuple
+
 from wai.common.cli import OptionsList
 
 from ....core.macros import load_macro_file, expand_macros
+from ....core.plugin.names import StagePluginName
 
 
-def perform_macro_expansion(options: OptionsList, filename: str) -> OptionsList:
+def perform_macro_expansion(
+        options: List[Tuple[StagePluginName, OptionsList]],
+        filename: str
+) -> List[Tuple[StagePluginName, OptionsList]]:
     """
     Performs macro expansion for the main function.
 

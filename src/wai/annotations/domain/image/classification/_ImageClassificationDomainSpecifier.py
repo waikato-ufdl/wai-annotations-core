@@ -1,8 +1,6 @@
 from typing import Type
 
-from ....core.domain import DomainSpecifier
-from ...classification import Classification
-from .._Image import Image
+from ....core.domain.specifier import DomainSpecifier
 from ._ImageClassificationInstance import ImageClassificationInstance
 
 DESCRIPTION = """Images categorised by content.
@@ -12,7 +10,7 @@ domain contain an image and a string label classifying the image.
 """
 
 
-class ImageClassificationDomainSpecifier(DomainSpecifier[Image, str]):
+class ImageClassificationDomainSpecifier(DomainSpecifier[ImageClassificationInstance]):
     """
     Domain specifier for images annotated with a label
     classifying the contents of the image
@@ -24,14 +22,6 @@ class ImageClassificationDomainSpecifier(DomainSpecifier[Image, str]):
     @classmethod
     def description(cls) -> str:
         return DESCRIPTION
-
-    @classmethod
-    def data_type(cls) -> Type[Image]:
-        return Image
-
-    @classmethod
-    def annotations_type(cls) -> Type[Classification]:
-        return Classification
 
     @classmethod
     def instance_type(cls) -> Type[ImageClassificationInstance]:

@@ -1,14 +1,22 @@
 from typing import Type, Tuple
 
-from ....core.component import ProcessorComponent
-from ....core.domain import DomainSpecifier
-from ....core.specifier import ProcessorStageSpecifier
+from ....core.component import Component
+from ....core.domain import Data
+from ....core.domain.specifier import DomainSpecifier
+from ....core.stage.bounds import InstanceTypeBoundRelationship, InstanceTypeBoundUnion
+from ....core.stage.specifier import ProcessorStageSpecifier
+from ....domain.classification import Classification
+from ....domain.image.object_detection import DetectedObjects
 
 
 class MapLabelsISPSpecifier(ProcessorStageSpecifier):
     """
     Specifies the map-labels ISP.
     """
+    @classmethod
+    def name(cls) -> str:
+        return "Map Labels"
+
     @classmethod
     def description(cls) -> str:
         return "Maps object-detection labels from one set to another"
@@ -28,6 +36,18 @@ class MapLabelsISPSpecifier(ProcessorStageSpecifier):
             )
 
     @classmethod
-    def components(cls) -> Tuple[Type[ProcessorComponent]]:
-        from ...map_labels.component import MapLabels
+    def bound_relationship(cls) -> InstanceTypeBoundRelationship:
+        return InstanceTypeBoundRelationship(
+            InstanceTypeBoundUnion((Data, Classification), (Data, DetectedObjects)),
+            InstanceTypeBoundUnion((Data, Classification), (Data, DetectedObjects)),
+            input_instance_type_must_match_output_instance_type=True,
+            output_instance_type_must_match_input_instance_type=True
+        )
+
+    @classmethod
+    def components(
+            cls,
+            bound_relationship: InstanceTypeBoundRelationship
+    ) -> Tuple[Type[Component], ...]:
+        from ..component import MapLabels
         return MapLabels,

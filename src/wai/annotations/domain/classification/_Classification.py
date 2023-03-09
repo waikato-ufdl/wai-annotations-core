@@ -1,4 +1,7 @@
-class Classification:
+from ...core.domain import Annotation
+
+
+class Classification(Annotation):
     """
     Represents a categorical classification of the data.
     """

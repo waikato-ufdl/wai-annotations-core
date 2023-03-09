@@ -1,22 +1,15 @@
-from typing import Type, Dict
+from dataclasses import asdict, fields
+from typing import Type
 
 from wai.common.cli import OptionsList
 
 from ....core.help import format_stage_usage
-from ....core.plugin import get_all_plugins, get_plugin_domains
-from ....core.specifier import *
-from ....core.specifier.util import specifier_type_string
+from ....core.plugin import get_all_plugins_by_type, AllPluginsByType
+from ....core.plugin.specifier import PluginSpecifier
+from ....core.stage.specifier import ProcessorStageSpecifier, SourceStageSpecifier, SinkStageSpecifier
 from ...logging import get_app_logger
 from ._help import plugins_help
 from ._PluginsOptions import PluginsOptions
-
-# Lookup from the type option to the sub-class for filtering
-plugin_types_lookup = {
-    "source": SourceStageSpecifier,
-    "processor": ProcessorStageSpecifier,
-    "sink": SinkStageSpecifier
-}
-
 
 def plugins_main(options: OptionsList):
     """
@@ -54,50 +47,32 @@ def get_plugins_formatted(options: PluginsOptions) -> str:
         exit()
 
     # Get the plugins registered with wai.annotations
-    plugins = get_all_plugins()
-
-    # Filter to the specified plugins
-    if len(options.ONLY) > 0:
-        plugins = {
-            name: plugins[name]
-            for name in options.ONLY
-            if name in plugins
-        }
+    plugins = get_all_plugins_by_type()
 
     # Filter to the specified types
     if len(options.ONLY_TYPES) > 0:
-        # Use the lookup to translate strings into specifier sub-classes
-        only_types = tuple(
-            plugin_types_lookup[type]
-            for type in options.ONLY_TYPES
-        )
+        to_remove = [field.name for field in fields(plugins) if field.name not in options.ONLY_TYPES]
+        for plugin_type in to_remove:
+            plugin_dict: dict = getattr(plugins, plugin_type)
+            plugin_dict.clear()
 
-        # Filter the plugins to the specified sub-classes
-        plugins = {
-            name: specifier
-            for name, specifier in plugins.items()
-            if issubclass(specifier, only_types)
-        }
+    # Filter to the specified plugins/types
+    if len(options.ONLY) > 0:
+        only = set(options.ONLY)
+        for plugin_dict in asdict(plugins).values():
+            to_remove = [key for key in plugin_dict.keys() if key not in only]
+            for key in to_remove:
+                plugin_dict.pop(key)
 
     return (
-        plugins_by_type(
-            {
-                type: {
-                    name: specifier
-                    for name, specifier in plugins.items()
-                    if issubclass(specifier, type)
-                }
-                for type in (SourceStageSpecifier, ProcessorStageSpecifier, SinkStageSpecifier)
-            },
-            options
-        )
+        format_plugins_by_type(plugins, options)
         if options.GROUP_BY_TYPE else
-        plugins_no_type(plugins, options)
+        format_plugins_no_group_by_type(plugins, options)
     )
 
 
-def plugins_by_type(
-        plugins: Dict[Type[StageSpecifier], Dict[str, Type[StageSpecifier]]],
+def format_plugins_by_type(
+        plugins: AllPluginsByType,
         options: PluginsOptions
 ) -> str:
     """
@@ -120,14 +95,6 @@ def plugins_by_type(
         "# Plugins\n"
     )
 
-    # If all plugins are filtered out, display None
-    if len(plugins) == 0:
-        result += (
-            "  NONE\n"
-            if cli_formatting else
-            "\nNone\n"
-        )
-
     # Choose a formatter based on the option
     formatter = (
         format_plugin_cli
@@ -135,28 +102,25 @@ def plugins_by_type(
         format_plugin_markdown
     )
 
-    for base_type, plugins_for_type in plugins.items():
-        # Skip empty types
+    for plugin_type, plugins_for_type in asdict(plugins).items():
+        # Skip empty plugin-types
         if len(plugins_for_type) == 0:
             continue
 
-        # Get the name of the type of plugin
-        base_type_string = specifier_type_string(base_type)
-
-        # Add aheading for the type
+        # Add a heading for the type
         result += (
-            f"  {base_type_string.upper()}:\n"
+            f"  {plugin_type.upper()}:\n"
             if cli_formatting else
-            f"## {base_type_string.capitalize()}\n"
+            f"## {plugin_type.capitalize()}\n"
         )
 
         # Sort the plugins by name
-        names_sorted = list(plugins_for_type.keys())
+        names_sorted = list(map(str, plugins_for_type.keys()))
         names_sorted.sort()
 
         # Format each plugin
         for name in names_sorted:
-            result += formatter(name, plugins_for_type[name], options, 6)
+            result += formatter(name, plugins_for_type[name], options, 3)
 
         # Additional separation between categories of plugins
         result += "\n"
@@ -164,8 +128,8 @@ def plugins_by_type(
     return result
 
 
-def plugins_no_type(
-        plugins: Dict[str, Type[StageSpecifier]],
+def format_plugins_no_group_by_type(
+        plugins: AllPluginsByType,
         options: PluginsOptions
 ) -> str:
     """
@@ -196,7 +160,7 @@ def plugins_no_type(
     )
 
     # Sort the plugins by name
-    names_sorted = list(plugins.keys())
+    names_sorted = list(plugins_for_type.keys() for plugins_for_type in asdict(plugins).values())
     names_sorted.sort()
 
     # Show 'none' if there are no matched plugins
@@ -216,7 +180,7 @@ def plugins_no_type(
 
 def format_plugin_cli(
         plugin_name: str,
-        plugin: Type[StageSpecifier],
+        plugin: Type[PluginSpecifier],
         options: PluginsOptions,
         indent: int
 ):
@@ -235,7 +199,7 @@ def format_plugin_cli(
                 The formatted plugin.
     """
     # Format the indentation string
-    indentation = " " * indent
+    indentation = "  " * indent
 
     # Add the name
     formatted = f"{indentation}{plugin_name.upper()}"
@@ -250,20 +214,35 @@ def format_plugin_cli(
         formatted += f"{indentation}  {plugin.description()}\n\n"
 
     # Add the domains if not suppressed
+    # FIXME: Show generic bounds instead of specific domains.
     if options.DOMAINS:
-        domains = ", ".join(domain.name() for domain in get_plugin_domains(plugin))
-        formatted += f"{indentation}  Domain(s): {domains}\n\n"
+        bound = (
+            plugin.bound_relationship() if issubclass(plugin, ProcessorStageSpecifier)
+            else plugin.bound() if issubclass(plugin, (SourceStageSpecifier, SinkStageSpecifier))
+            else None
+        )
+
+        # TODO: Remove try/except once InstanceTypeBoundRelationship __str__ is fully implemented
+        try:
+            bound = str(bound) if bound is not None else None
+        except NotImplementedError:
+            bound = "[formatting bound failed]"
+
+        if bound is not None:
+            formatted += f"{indentation}  Bound: {bound}\n\n"
+
 
     # Add the options if not suppressed
-    if options.OPTIONS:
-        formatted += f"{format_stage_usage(plugin, plugin_name, indent + 2)}\n"
+    # TODO: Reinstate once multi-domain components can be joined
+    #if options.OPTIONS:
+    #    formatted += f"{format_stage_usage(plugin, plugin_name, indent + 2)}\n"
 
     return formatted
 
 
 def format_plugin_markdown(
         plugin_name: str,
-        plugin: Type[StageSpecifier],
+        plugin: Type[PluginSpecifier],
         options: PluginsOptions,
         indent: int
 ):
@@ -282,7 +261,7 @@ def format_plugin_markdown(
                 The formatted plugin.
     """
     # Format the indentation string
-    indentation = "#" * (indent // 2)
+    indentation = "#" * indent
 
     # Format the plugin name
     formatted = f"{indentation} {plugin_name.upper()}\n"
@@ -292,12 +271,29 @@ def format_plugin_markdown(
         formatted += f"{plugin.description()}\n\n"
 
     # Add the domains if not suppressed
+    # FIXME: Show generic bounds instead of specific domains.
+
+
     if options.DOMAINS:
-        domains = "\n".join(f"- **{domain.name()}**" for domain in get_plugin_domains(plugin))
-        formatted += f"{indentation}# Domain(s):\n{domains}\n\n"
+
+        bound = (
+            plugin.bound_relationship() if issubclass(plugin, ProcessorStageSpecifier)
+            else plugin.bound() if issubclass(plugin, (SourceStageSpecifier, SinkStageSpecifier))
+            else None
+        )
+
+        # TODO: Remove try/except once InstanceTypeBoundRelationship __str__ is fully implemented
+        try:
+            bound = str(bound) if bound is not None else None
+        except NotImplementedError:
+            bound = "[formatting bound failed]"
+
+        if bound is not None:
+            formatted += f"{indentation}# Bound:\n{bound}\n\n"
 
     # Add the options if not suppressed
-    if options.OPTIONS:
-        formatted += f"{indentation}# Options:\n```\n{format_stage_usage(plugin, plugin_name, 0)}```\n\n"
+    # TODO: Reinstate once multi-domain components can be joined
+    #if options.OPTIONS:
+    #    formatted += f"{indentation}# Options:\n```\n{format_stage_usage(plugin, plugin_name, 0)}```\n\n"
 
     return formatted

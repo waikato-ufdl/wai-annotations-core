@@ -1,30 +1,30 @@
-from typing import Generic, TypeVar, ContextManager
+from typing import Optional, TypeVar, ContextManager
 from weakref import finalize
 
 # The type of the managed context-manager
-CMType = TypeVar("CMType", bound=ContextManager)
+ManagedType = TypeVar("ManagedType")
 
 
-class ReentrantContextManager(Generic[CMType]):
+class ReentrantContextManager(ContextManager[ManagedType]):
     """
     A context-manager that manages another context-manager, allowing it
     to be kept open without exiting/re-entering the context.
     """
-    def __init__(self, managed: CMType):
+    def __init__(self, managed: ContextManager[ManagedType]):
         # The managed context-manager
-        self._managed: CMType = managed
+        self._managed: ContextManager[ManagedType] = managed
 
         # The result of calling the __enter__ method
-        self._enter_result = None
+        self._enter_result: Optional[ManagedType] = None
 
         # Whether the __enter__ method has been called
         self._entered: bool = False
 
         # A finaliser which closes the context-manager if we are
         # garbage-collected before doing so ourselves
-        self._finaliser = None
+        self._finaliser: Optional[finalize] = None
 
-    def __enter__(self):
+    def __enter__(self) -> ManagedType:
         # Enter the context if we haven't already
         if not self._entered:
             self._enter_result = self._managed.__enter__()

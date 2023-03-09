@@ -2,8 +2,10 @@ import numpy as np
 from typing import Tuple, List
 from PIL import Image
 
+from ....core.domain import Annotation
 
-class ImageSegmentationAnnotation:
+
+class ImageSegmentationAnnotation(Annotation):
     """
     Represents the annotations for a single image in an image-segmentation
     data-set. Consists of an array of indices into a table of labels.
