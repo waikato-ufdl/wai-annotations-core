@@ -1,16 +1,12 @@
 from itertools import chain
-from typing import Optional, List, Tuple
+from typing import Optional, List
 
 from wai.common.cli import OptionsList
 
-from ..plugin.names import StagePluginName
 from ._MacroFile import MacroFile
 
 
-def expand_macros(
-        macros: MacroFile,
-        options: List[Tuple[StagePluginName, OptionsList]]
-) -> List[Tuple[StagePluginName, OptionsList]]:
+def expand_macros(macros: MacroFile, options: OptionsList) -> OptionsList:
     """
     Returns the options list, with macros from the given file expanded.
 
@@ -18,17 +14,10 @@ def expand_macros(
     :param options:     The options list (including macros).
     :return:            An options list with macros expanded.
     """
-    return [
-        (stage_name, join_options(map_macros(macros, stage_options)))
-        for stage_name, stage_options in options
-    ]
+    return join_options(map_macros(macros, options))
 
 
-def map_macros(
-        macros: MacroFile,
-        options: OptionsList,
-        seen: Optional[List[str]] = None
-) -> List[OptionsList]:
+def map_macros(macros: MacroFile, options: OptionsList, seen: Optional[List[str]] = None) -> List[OptionsList]:
     """
     Performs recursive expansion of macros, mapping each input option to its
     expanded list of options (or just the original option if no expansion is

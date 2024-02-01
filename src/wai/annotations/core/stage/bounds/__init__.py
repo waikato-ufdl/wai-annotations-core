@@ -1,3 +1,0 @@
-from ._InstanceTypeBound import InstanceTypeBound
-from ._InstanceTypeBoundRelationship import InstanceTypeBoundRelationship
-from ._InstanceTypeBoundUnion import InstanceTypeBoundUnion

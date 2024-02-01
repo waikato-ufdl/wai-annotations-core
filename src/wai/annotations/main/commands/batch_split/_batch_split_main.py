@@ -1,6 +1,4 @@
 """
-TODO: Rewrite for batch-split.
-
 Module containing the main entry point function for getting information about
 domains registered with wai.annotations.
 """
@@ -61,15 +59,8 @@ class Splitter(object):
     Based on code from wai.annotations.core.util.SplitSink
     """
 
-    def __init__(
-            self,
-            names: List[str],
-            ratios: List[int],
-            file_names: List[str],
-            regexp: str = None,
-            groups: List[int] = None,
-            verbose: bool = False
-    ):
+    def __init__(self, names: List[str], ratios: List[int], file_names: List[str], regexp: str = None,
+                 groups: List[int] = None, verbose: bool = False):
         """
         Initializes the splitter with the names/ratios of the splits.
 

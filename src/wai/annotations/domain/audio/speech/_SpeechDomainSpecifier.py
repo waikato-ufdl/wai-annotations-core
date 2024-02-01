@@ -1,6 +1,6 @@
 from typing import Type
 
-from ....core.domain.specifier import DomainSpecifier
+from ....core.domain import DomainSpecifier
 from .._Audio import Audio
 from ._SpeechInstance import SpeechInstance
 from ._Transcription import Transcription
@@ -12,7 +12,7 @@ contents of the audio. Instances in this domain are an audio file and a string c
 """
 
 
-class SpeechDomainSpecifier(DomainSpecifier[SpeechInstance]):
+class SpeechDomainSpecifier(DomainSpecifier[Audio, Transcription]):
     """
     Domain specifier for audio recordings of speech annotated the
     transcription of the spoken words.

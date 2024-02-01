@@ -1,7 +1,4 @@
-from ....core.domain import Annotation
-
-
-class Transcription(Annotation):
+class Transcription:
     """
     The transcription of a piece of recorded speech.
     """

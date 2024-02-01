@@ -1,10 +1,8 @@
 from typing import Type, Tuple
 
 from ....core.component import ProcessorComponent
-from ....core.domain import Data
-from ....core.stage.bounds import InstanceTypeBoundRelationship
-from ....core.stage.specifier import ProcessorStageSpecifier
-from ....domain.audio.speech import Transcription
+from ....core.domain import DomainSpecifier
+from ....core.specifier import ProcessorStageSpecifier
 
 
 class CleanTranscriptISPSpecifier(ProcessorStageSpecifier):
@@ -12,23 +10,24 @@ class CleanTranscriptISPSpecifier(ProcessorStageSpecifier):
     ISP that cleans speech transcripts.
     """
     @classmethod
-    def name(cls) -> str:
-        return "Clean Transcript"
-
-    @classmethod
     def description(cls) -> str:
         return "ISP that cleans speech transcripts."
 
     @classmethod
-    def bound_relationship(cls) -> InstanceTypeBoundRelationship:
-        return InstanceTypeBoundRelationship(
-            (Data, Transcription),
-            (Data, Transcription),
-            input_instance_type_must_match_output_instance_type=True,
-            output_instance_type_must_match_input_instance_type=True
-        )
+    def domain_transfer_function(
+            cls,
+            input_domain: Type[DomainSpecifier]
+    ) -> Type[DomainSpecifier]:
+        from ....domain.audio.speech import SpeechDomainSpecifier
+        if input_domain is SpeechDomainSpecifier:
+            return SpeechDomainSpecifier
+        else:
+            raise Exception(
+                f"CleanTranscript only handles the "
+                f"{SpeechDomainSpecifier.name()} domain"
+            )
 
     @classmethod
-    def components(cls, bound_relationship: InstanceTypeBoundRelationship) -> Tuple[Type[ProcessorComponent]]:
+    def components(cls) -> Tuple[Type[ProcessorComponent]]:
         from ...clean_transcript.component import CleanTranscript
         return CleanTranscript,

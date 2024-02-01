@@ -1,10 +1,8 @@
-from wai.common.cli.options import FlagOption, TypedOption
-
 from ....core.component import ProcessorComponent
-from ....core.domain import Data, Instance
+from wai.annotations.domain.audio.speech import SpeechInstance, Transcription
 from ....core.stream import ThenFunction, DoneFunction
 from ....core.stream.util import RequiresNoFinalisation
-from ....domain.audio.speech import Transcription
+from wai.common.cli.options import FlagOption, TypedOption
 
 QUOTES = "'\"‘’“”‹›«»"
 
@@ -15,14 +13,12 @@ BRACKETS = "()[]{}〈〉"
 
 class CleanTranscript(
     RequiresNoFinalisation,
-    ProcessorComponent[
-        Instance[Data, Transcription],
-        Instance[Data, Transcription]
-    ]
+    ProcessorComponent[SpeechInstance, SpeechInstance]
 ):
     """
     ISP that cleans up speech transcripts.
     """
+
     non_alpha_numeric: str = FlagOption(
         "-a", "--non-alpha-numeric",
         help="removes all characters that are not alpha-numeric"
@@ -68,8 +64,8 @@ class CleanTranscript(
 
     def process_element(
             self,
-            element: Instance[Data, Transcription],
-            then: ThenFunction[Instance[Data, Transcription]],
+            element: SpeechInstance,
+            then: ThenFunction[SpeechInstance],
             done: DoneFunction
     ):
         # assemble characters to remove
@@ -84,15 +80,12 @@ class CleanTranscript(
             remove_chars.update(self.custom)
 
         # nothing to do?
-        if (
-            (len(remove_chars) == 0) and not self.non_alpha_numeric and not self.non_letters and not self.numeric
-            or element.annotation is None
-        ):
+        if (len(remove_chars) == 0) and not self.non_alpha_numeric and not self.non_letters and not self.numeric:
             then(element)
             return
 
         # clean transcript
-        text = element.annotation.text
+        text = element.annotations.text
         if self.non_alpha_numeric:
             text = ''.join(c for c in text if c.isalnum())
         if self.non_letters:
@@ -102,15 +95,15 @@ class CleanTranscript(
         if len(remove_chars) > 0:
             text = ''.join(c for c in text if (c not in remove_chars))
 
-        modified = text != element.annotation.text
+        modified = text != element.annotations.text
 
         if self.verbose:
-            self.logger.info("%s -> %s (%s)" % (element.annotation.text, text, str(modified)))
+            self.logger.info("%s -> %s (%s)" % (element.annotations.text, text, str(modified)))
 
         # any changes?
         if modified:
             new_transcript = Transcription(text)
-            new_element = element.from_parts(element.key, element.data, new_transcript)
+            new_element = SpeechInstance(element.data, new_transcript)
             then(new_element)
         else:
             then(element)

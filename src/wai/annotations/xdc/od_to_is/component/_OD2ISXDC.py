@@ -4,7 +4,7 @@ from wai.common.cli.options import FlagOption
 
 from ....core.component import ProcessorComponent
 from ....core.stream import ThenFunction, DoneFunction
-from ....core.stream.util import RequiresNoFinalisation
+from ....core.stream.util import ProcessState, RequiresNoFinalisation
 from ....domain.image.object_detection import ImageObjectDetectionInstance
 from ....domain.image.object_detection.util import get_object_label
 from ....domain.image.segmentation import ImageSegmentationInstance, ImageSegmentationAnnotation
@@ -33,8 +33,8 @@ class OD2ISXDC(
             done: DoneFunction
     ):
         # If the instance is a negative, leave it as one
-        if element.data is None or element.annotation is None:
-            return then(ImageSegmentationInstance(element.key, element.data, None))
+        if element.annotations is None:
+            return then(ImageSegmentationInstance(element.data, None))
 
         # Create an empty segmentation annotation
         annotation = ImageSegmentationAnnotation(self.labels, element.data.size)
@@ -44,7 +44,6 @@ class OD2ISXDC(
         for label in reversed(self.labels):
             for located_object in element.annotations:
                 # Get the label for the located object
-                # FIXME: How to handle no object label?
                 located_object_label = get_object_label(located_object)
 
                 # Check for unspecified labels
@@ -56,13 +55,11 @@ class OD2ISXDC(
                     continue
 
                 # Get the mask for the object's bounds
-                mask = (
-                    mask_from_polygon(located_object.get_polygon(), annotation.size[0], annotation.size[1])
-                    if located_object.has_polygon() else
+                mask = mask_from_polygon(located_object.get_polygon(), annotation.size[0], annotation.size[1]) \
+                    if located_object.has_polygon() else \
                     mask_from_rectangle(located_object.get_rectangle(), annotation.size[0], annotation.size[1])
-                )
 
                 # Mix the mask in with the segmentation so far
                 annotation.indices = np.where(mask, np.uint16(self.label_lookup[label]), annotation.indices)
 
-        then(ImageSegmentationInstance(element.key, element.data, annotation))
+        then(ImageSegmentationInstance(element.data, annotation))

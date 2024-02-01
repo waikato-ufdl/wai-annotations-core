@@ -27,5 +27,5 @@ class Spectrum(Data):
         return str(self._spectrum_base)
 
     @classmethod
-    def from_data(cls, file_name: str, file_data: bytes) -> 'Spectrum':
+    def from_file_data(cls, file_name: str, file_data: bytes) -> 'Spectrum':
         return cls(file_name, file_data)

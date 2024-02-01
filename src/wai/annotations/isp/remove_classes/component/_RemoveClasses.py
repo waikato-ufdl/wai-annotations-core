@@ -1,11 +1,11 @@
-from typing import FrozenSet, Union
+from typing import FrozenSet
 
 import numpy as np
 
 from wai.common.cli.options import TypedOption
 
 from ....core.component import ProcessorComponent
-from ....core.domain import Data, Instance
+from ....core.domain import Instance
 from ....core.stream import ThenFunction, DoneFunction
 from ....core.stream.util import RequiresNoFinalisation
 from ....core.util import InstanceState
@@ -15,10 +15,7 @@ from ....domain.image.segmentation import ImageSegmentationAnnotation
 
 class RemoveClasses(
     RequiresNoFinalisation,
-    ProcessorComponent[
-        Instance[Data, Union[Classification, ImageSegmentationAnnotation]],
-        Instance[Data, Union[Classification, ImageSegmentationAnnotation]]
-    ]
+    ProcessorComponent[Instance, Instance]
 ):
     """
     Inline stream-processor which removes classes from the stream. If used with

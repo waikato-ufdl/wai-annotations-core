@@ -1,18 +1,15 @@
-from wai.common.adams.imaging.locateobjects import LocatedObject
+from wai.common.adams.imaging.locateobjects import LocatedObjects, LocatedObject
 from wai.common.cli.options import TypedOption, FlagOption
 
 from ....core.component import ProcessorComponent
 from ....core.stream import ThenFunction, DoneFunction
 from ....core.stream.util import RequiresNoFinalisation
-from ....domain.image.object_detection import DetectedObjects, ImageObjectDetectionInstance
+from ....domain.image.object_detection import ImageObjectDetectionInstance
 
 
 class PolygonDiscarder(
     RequiresNoFinalisation,
-    ProcessorComponent[
-        ImageObjectDetectionInstance,
-        ImageObjectDetectionInstance
-    ]
+    ProcessorComponent[ImageObjectDetectionInstance, ImageObjectDetectionInstance]
 ):
     """
     Stream processor which removes annotations with polygons that fall outside
@@ -42,16 +39,14 @@ class PolygonDiscarder(
             done: DoneFunction
     ):
         # Unpack the format
-        key, image, located_objects = element.parts()
+        image_info, located_objects = element
 
         # Create a new set of located objects with only non-zero-area annotations
-        located_objects = DetectedObjects(
-            located_object
-            for located_object in located_objects
-            if not self._should_discard_located_object(located_object)
-        )
+        located_objects = LocatedObjects((located_object
+                                          for located_object in located_objects
+                                          if not self._should_discard_located_object(located_object)))
 
-        then(type(element).from_parts(key, image, located_objects))
+        then(ImageObjectDetectionInstance(image_info, located_objects))
 
     def _should_discard_located_object(self, located_object: LocatedObject) -> bool:
         """

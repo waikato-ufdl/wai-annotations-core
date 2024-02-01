@@ -1,6 +1,8 @@
 from typing import Type
 
-from ....core.domain.specifier import DomainSpecifier
+from ....core.domain import DomainSpecifier
+from ...classification import Classification
+from .._Spectrum import Spectrum
 from ._SpectrumClassificationInstance import SpectrumClassificationInstance
 
 DESCRIPTION = """Spectra categorised by target.
@@ -10,7 +12,7 @@ domain contain a spectrum and a string label classifying the spectrum.
 """
 
 
-class SpectrumClassificationDomainSpecifier(DomainSpecifier[SpectrumClassificationInstance]):
+class SpectrumClassificationDomainSpecifier(DomainSpecifier[Spectrum, Classification]):
     """
     Domain specifier for spectra annotated with a label
     classifying the contents of the spectrum.
@@ -22,6 +24,14 @@ class SpectrumClassificationDomainSpecifier(DomainSpecifier[SpectrumClassificati
     @classmethod
     def description(cls) -> str:
         return DESCRIPTION
+
+    @classmethod
+    def data_type(cls) -> Type[Spectrum]:
+        return Spectrum
+
+    @classmethod
+    def annotations_type(cls) -> Type[Classification]:
+        return Classification
 
     @classmethod
     def instance_type(cls) -> Type[SpectrumClassificationInstance]:

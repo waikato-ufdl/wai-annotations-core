@@ -1,5 +1,6 @@
-from ..domain import Instance
-from ..stage.bounds import InstanceTypeBoundUnion
+from typing import Type, Tuple
+
+from ..domain import Instance, DomainSpecifier
 from ..stream import StreamProcessor, ThenFunction, DoneFunction
 from ..stream.util import RequiresNoFinalisation
 from .error import BadDomain
@@ -10,10 +11,11 @@ class InlineDomainValidator(
     StreamProcessor[Instance, Instance]
 ):
     """
-    Makes sure all instances match the given type-bound.
+    Makes sure all instances are from the specified domain.
     """
-    def __init__(self, bound: InstanceTypeBoundUnion):
-        self._bound = bound
+    def __init__(self, *domains: Type[DomainSpecifier]):
+        self._domains: Tuple[Type[DomainSpecifier], ...] = domains
+        self._instance_classes: Tuple[Type[Instance], ...] = tuple(domain.instance_type() for domain in domains)
 
     def process_element(
             self,
@@ -21,11 +23,9 @@ class InlineDomainValidator(
             then: ThenFunction[Instance],
             done: DoneFunction
     ):
-        instance_type = type(element)
-        if self._bound.intersection_bound(InstanceTypeBoundUnion(instance_type)) is None:
-            raise BadDomain(
-                f"{instance_type.__qualname__} (instance-type for {instance_type.domain_specifier().name()}) "
-                f"in stream where allowed instance-types are {self._bound}"
-            )
+        # Make sure the instance is from the given domain
+        if not isinstance(element, self._instance_classes):
+            raise BadDomain(f"{element.__class__.__name__} in stream where allowed domains are: "
+                            f"{', '.join(domain.name() for domain in self._domains)}")
 
         then(element)

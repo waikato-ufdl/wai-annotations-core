@@ -2,7 +2,7 @@ import io
 import os
 from typing import Optional, Tuple
 
-from PIL.Image import Image as PILImage, open as open_pil_image
+from PIL import Image as PILImage
 
 from ...core.domain import Data
 from ...core.util import InstanceState
@@ -16,31 +16,35 @@ class Image(Data):
     """
     def __init__(
             self,
-            data: bytes,
+            filename: str,
+            data: Optional[bytes] = None,
             format: Optional[ImageFormat] = None,
             size: Optional[Tuple[int, int]] = None
     ):
-        super().__init__(data)
+        super().__init__(filename, data)
 
         self._format: ImageFormat = (
             format if format is not None
-            else ImageFormat.for_extension(self.pil_image.format)
+            else ImageFormat.for_filename(filename)
         )
 
-        self._size: Tuple[int, int] = (
+        self._size: Optional[Tuple[int, int]] = (
             size if size is not None
-            else (self.pil_image.width, self.pil_image.height)
+            else (self.pil_image.width, self.pil_image.height) if self.pil_image is not None
+            else None
         )
 
     # The PIL image representation of this image data
-    pil_image: PILImage = InstanceState(
-        lambda self:
-            open_pil_image(io.BytesIO(self.data))
+    pil_image: Optional[PILImage.Image] = InstanceState(
+        lambda self: (
+            PILImage.open(io.BytesIO(self.data)) if self.data is not None
+            else None
+        )
     )
 
     @classmethod
-    def from_data(cls, file_data: bytes) -> 'Image':
-        return cls(file_data)
+    def from_file_data(cls, file_name: str, file_data: bytes) -> 'Image':
+        return cls(file_name, file_data)
 
     def convert(self, to_format: ImageFormat) -> 'Image':
         """
@@ -77,7 +81,7 @@ class Image(Data):
         """
         Gets the (width, height) dimensions of the image.
         """
-        return self._size
+        return self._size if self._size is not None else (-1, -1)
 
     @property
     def width(self) -> int:

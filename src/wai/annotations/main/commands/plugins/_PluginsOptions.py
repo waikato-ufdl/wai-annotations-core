@@ -1,12 +1,9 @@
 from argparse import ArgumentParser
-from dataclasses import fields
 
 from wai.common.cli import CLIInstantiable
 from wai.common.cli.options import FlagOption, TypedOption
 
-from ....core.plugin import get_all_plugin_names, AllPluginsByType
-
-ONLY_TYPES_CHOICES = tuple(field.name for field in fields(AllPluginsByType))
+from ....core.plugin import get_all_plugin_names
 
 
 class PluginsOptions(CLIInstantiable):
@@ -26,8 +23,8 @@ class PluginsOptions(CLIInstantiable):
         "-O", "--only-types",
         type=str,
         nargs="+",
-        choices=ONLY_TYPES_CHOICES,
-        help=f"restricts the set of plugins to only the specified types ({', '.join(ONLY_TYPES_CHOICES)})",
+        choices=("source", "sink", "processor"),
+        help="restricts the set of plugins to only the specified types (can be source, sink, or processor)",
         metavar="TYPE"
     )
 

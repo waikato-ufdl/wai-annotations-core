@@ -1,18 +1,14 @@
 from wai.common.cli.options import TypedOption
 
 from ....core.component import ProcessorComponent
-from ....core.domain import Annotation, Instance
 from ....core.stream import ThenFunction, DoneFunction
 from ....core.stream.util import RequiresNoFinalisation
-from ....domain.image import Image, ImageFormat
+from ....domain.image import ImageFormat, ImageInstance
 
 
 class ConvertImageFormat(
     RequiresNoFinalisation,
-    ProcessorComponent[
-        Instance[Image, Annotation],
-        Instance[Image, Annotation]
-    ]
+    ProcessorComponent[ImageInstance, ImageInstance]
 ):
     """
     Processes a stream of image-based instances, converting the
@@ -28,14 +24,13 @@ class ConvertImageFormat(
 
     def process_element(
             self,
-            element: Instance[Image, Annotation],
-            then: ThenFunction[Instance[Image, Annotation]],
+            element: ImageInstance,
+            then: ThenFunction[ImageInstance],
             done: DoneFunction
     ):
         then(
-            element.from_parts(
-                element.key,
+            type(element)(
                 element.data.convert(self.format),
-                element.annotation
+                element.annotations
             )
         )

@@ -1,13 +1,10 @@
 import librosa
 import numpy as np
 
-from typing import Optional, Tuple, Type
+from typing import Optional, Tuple
 from ...core.domain import Data
 from ._AudioFormat import AudioFormat
 from .util import convert_audio_format, load_audio_data
-
-# The default audio-format to use if generating audio file-data from audio-data
-DEFAULT_AUDIO_FORMAT: AudioFormat = AudioFormat.OGG
 
 
 class Audio(Data):
@@ -16,38 +13,45 @@ class Audio(Data):
     """
     def __init__(
             self,
-            data: Optional[bytes],
+            filename: str,
+            data: Optional[bytes] = None,
             format: Optional[AudioFormat] = None,
             sample_rate: Optional[int] = None,
             audio_data: Optional[Tuple[np.ndarray, int]] = None,
     ):
-        if data is None:
-            if audio_data is None:
-                raise Exception("Can't create file-data without audio-data")
-            if format is None:
-                format = DEFAULT_AUDIO_FORMAT
+        super().__init__(filename, data)
 
-            data = convert_audio_format(audio_data[0], audio_data[1], format)
+        self._format: AudioFormat = (
+            format if format is not None
+            else AudioFormat.for_filename(filename)
+        )
 
-        super().__init__(data)
-
-        self._format: Optional[AudioFormat] = format
-        self._sample_rate: Optional[int] = sample_rate
-        self._audio_data: Optional[Tuple[np.ndarray, int]] = audio_data
+        self._sample_rate: int = sample_rate
+        self._audio_data: [Tuple[np.ndarray, int]] = audio_data
 
     @property
-    def audio_data(self) -> Tuple[np.ndarray, int]:
+    def data(self) -> Optional[bytes]:
+        """
+        The binary contents of the file, if available.
+        """
+        if (self._data is None) and (self._audio_data is not None):
+            self._data = convert_audio_format(self._audio_data[0], self._audio_data[1], self._format)
+        return self._data
+
+    @property
+    def audio_data(self):
         """
         Returns a tuple of the audio data and sample rate.
 
         :return: the tuple of audio data and sample rate or None if no data available
+        :rtype: Tuple[np.ndarray, int]
         """
         if self._audio_data is None:
-            self._audio_data = load_audio_data(self._data, self._format, self._sample_rate)
+            self._audio_data = load_audio_data(self.data, self.format, self._sample_rate) if (self.data is not None) else None
         return self._audio_data
 
     @property
-    def format(self) -> Optional[AudioFormat]:
+    def format(self) -> AudioFormat:
         """
         Gets the format of this audio file.
         """
@@ -71,15 +75,20 @@ class Audio(Data):
         """
         # If it's the same format, just make a copy
         if to_format is self._format:
-            return self
+            return Audio(
+                self.filename,
+                self.data,
+                self.format,
+                self._sample_rate
+            )
 
         return Audio(
-            None,
+            to_format.replace_extension(self.filename),
+            convert_audio_format(self.audio_data[0], self.audio_data[1], to_format) if self.data is not None else None,
             to_format,
-            self._sample_rate,
-            self.audio_data
+            self._sample_rate
         )
 
     @classmethod
-    def from_data(cls: Type['Audio'], file_data: bytes) -> 'Audio':
-        return cls(file_data)
+    def from_file_data(cls, file_name: str, file_data: bytes) -> 'Audio':
+        return cls(file_name, file_data)

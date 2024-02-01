@@ -1,11 +1,8 @@
 from typing import Type, Tuple
 
 from ....core.component import ProcessorComponent
-from ....core.domain import Data, Instance
-from ....core.domain.specifier import DomainSpecifier
-from ....core.stage.bounds import InstanceTypeBoundRelationship
-from ....core.stage.specifier import ProcessorStageSpecifier
-from ....domain.image.object_detection import DetectedObjects
+from ....core.domain import DomainSpecifier
+from ....core.specifier import ProcessorStageSpecifier
 
 
 class BoxBoundsCoercionISPSpecifier(ProcessorStageSpecifier):
@@ -13,23 +10,24 @@ class BoxBoundsCoercionISPSpecifier(ProcessorStageSpecifier):
     Specifies the box-bounds coercion.
     """
     @classmethod
-    def name(cls) -> str:
-        return "Box Bounds Coercion"
-
-    @classmethod
     def description(cls) -> str:
         return "Converts all annotation bounds into box regions"
 
     @classmethod
-    def bound_relationship(cls) -> InstanceTypeBoundRelationship:
-        return InstanceTypeBoundRelationship(
-            (Data, DetectedObjects),
-            (Data, DetectedObjects),
-            input_instance_type_must_match_output_instance_type=True,
-            output_instance_type_must_match_input_instance_type=True
-        )
+    def domain_transfer_function(
+            cls,
+            input_domain: Type[DomainSpecifier]
+    ) -> Type[DomainSpecifier]:
+        from ....domain.image.object_detection import ImageObjectDetectionDomainSpecifier
+        if input_domain is ImageObjectDetectionDomainSpecifier:
+            return ImageObjectDetectionDomainSpecifier
+        else:
+            raise Exception(
+                f"BoxBoundsCoercion only handles the "
+                f"{ImageObjectDetectionDomainSpecifier.name()} domain"
+            )
 
     @classmethod
-    def components(cls, bound_relationship: InstanceTypeBoundRelationship) -> Tuple[Type[ProcessorComponent]]:
+    def components(cls) -> Tuple[Type[ProcessorComponent]]:
         from ...coercions.component import BoxBoundsCoercion
         return BoxBoundsCoercion,

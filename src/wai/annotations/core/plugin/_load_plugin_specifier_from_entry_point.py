@@ -2,38 +2,33 @@ from typing import Type
 
 from pkg_resources import EntryPoint
 
-from ..util import is_subtype, describe_value
+from ..specifier import StageSpecifier
+from ..specifier.util import validate_stage_specifier
 from .error import BadPluginSpecifier
-from .specifier import PluginSpecifier
 
 
-def load_plugin_specifier_from_entry_point(
-        name: str,
-        entry_point: EntryPoint
-) -> Type[PluginSpecifier]:
+def load_plugin_specifier_from_entry_point(entry_point: EntryPoint) -> Type[StageSpecifier]:
     """
-    Loads a plugin specifier from an entry-point.
+    Loads a plugin-specifier from an entry-point, or raises
+    an instance of this error if it can't.
 
-    :param name:
-                The name of the plugin.
-    :param entry_point:
-                The entry-point to load from.
-    :return:
-                The plugin specifier.
+    :param entry_point:     The entry-point to load from.
+    :return:                The plugin specifier.
     """
-    # Try to load the (supposed) plugin specifier from the entry-point
+    # Make sure all escaping exceptions are of this type
     try:
-        specifier = entry_point.load()
+        # Load the plugin specifier from the entry-point
+        format_specifier = entry_point.load()
 
-    # Type any errors raised during loading
+        # Validate the specifier
+        validate_stage_specifier(format_specifier)
+
+        return format_specifier
+
+    # If we raised an instance, let it escape
+    except BadPluginSpecifier:
+        raise
+
+    # Wrap any other error as an instance
     except Exception as e:
-        raise BadPluginSpecifier(f"Error loading plugin '{name}': {e}") from e
-
-    # Check it actually is a plugin specifier
-    if not is_subtype(specifier, PluginSpecifier):
-        raise BadPluginSpecifier(
-            f"Plugin specifier '{name}' should be a sub-class of {PluginSpecifier.__qualname__}, "
-            f"received {describe_value(specifier)}"
-        )
-
-    return specifier
+        raise BadPluginSpecifier() from e

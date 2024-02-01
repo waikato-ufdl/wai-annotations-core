@@ -1,2 +1,0 @@
-from ._DictStoreSpecifier import DictStoreSpecifier
-from ._LocalFileStoreSpecifier import LocalFileStoreSpecifier

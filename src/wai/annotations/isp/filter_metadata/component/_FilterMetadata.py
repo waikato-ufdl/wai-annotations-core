@@ -1,12 +1,9 @@
-from typing import Iterator, List, Tuple, Union
-
 from wai.common.adams.imaging.locateobjects import LocatedObjects, LocatedObject
 from wai.common.cli.options import TypedOption
 
 from ....core.component import ProcessorComponent
 from ....core.stream import ThenFunction, DoneFunction
 from ....core.stream.util import RequiresNoFinalisation
-from ....core.util import InstanceState
 from ....domain.image.object_detection import ImageObjectDetectionInstance
 
 
@@ -47,66 +44,50 @@ COMPARISONS = {
 
 class FilterMetadata(
     RequiresNoFinalisation,
-    ProcessorComponent[
-        ImageObjectDetectionInstance,
-        ImageObjectDetectionInstance
-    ]
+    ProcessorComponent[ImageObjectDetectionInstance, ImageObjectDetectionInstance]
 ):
     """
     Processes a stream of image object-detection instances,
     filtering out labels.
     """
-    key: str = TypedOption(
-        "-k", "--key",
-        type=str,
-        help="the key of the meta-data value to use for the filtering"
-    )
+    key: str = TypedOption("-k", "--key",
+                      type=str,
+                      help="the key of the meta-data value to use for the filtering")
 
-    value_type: str = TypedOption(
-        "-t", "--value-type",
-        type=str,
-        help="the data type that the value represents, available options: %s" % "|".join(TYPES)
-    )
+    value_type: str = TypedOption("-t", "--value-type",
+                        type=str,
+                        help="the data type that the value represents, available options: %s" % "|".join(TYPES))
 
-    comparison: str = TypedOption(
-        "-c", "--comparison",
-        type=str,
-        help="the comparison to apply to the value: for bool/numeric/string '=OTHER' and '!=OTHER' can be used, " 
-             "for numeric furthermore '<OTHER', '<=OTHER', '>=OTHER', '>OTHER'. "
-             "E.g.: '<3.0' for numeric types will discard any annotations that have a value of 3.0 or larger"
-    )
+    comparison: str = TypedOption("-c", "--comparison",
+                        type=str,
+                        help="the comparison to apply to the value: for bool/numeric/string '=OTHER' and '!=OTHER' can be used, " 
+                             "for numeric furthermore '<OTHER', '<=OTHER', '>=OTHER', '>OTHER'. "
+                             "E.g.: '<3.0' for numeric types will discard any annotations that have a value of 3.0 or larger")
 
-    @InstanceState
-    def _comparison_str(self) -> str:
+    def _initialize(self):
+        """
+        Initializes the state.
+        """
         comparison = self.comparison
-        result = None
-        for comparison_str in COMPARISONS:
-            if comparison.startswith(comparison_str) and result is None or len(comparison_str) > len(result):
-                result = comparison_str
-
-
-        if result is None:
+        if "=" in comparison:
+            self._comparison_str = comparison[0:comparison.index("=") + 1]
+        elif comparison.startswith("<"):
+            self._comparison_str = comparison[0]
+        elif comparison.startswith(">"):
+            self._comparison_str = comparison[0]
+        else:
             raise Exception("Unhandled comparison: %s" % self.comparison)
 
-        return result
+        self._comparison = COMPARISONS[self._comparison_str]
+        value = comparison[len(self._comparison_str):]
 
-    @InstanceState
-    def _comparison(self) -> int:
-        return COMPARISONS[self._comparison_str]
-
-    @InstanceState
-    def _value_type(self) -> int:
-        return TYPE_IDS[self.value_type]
-
-    @InstanceState
-    def _comparison_value(self) -> Union[bool, float, str]:
-        value = self.comparison[len(self._comparison_str):]
+        self._value_type = TYPE_IDS[self.value_type]
         if self._value_type == TYPE_BOOL_ID:
-            return bool(value)
+            self._comparison_value = bool(value)
         elif self._value_type == TYPE_NUMERIC_ID:
-            return float(value)
+            self._comparison_value = float(value)
         else:
-            return value
+            self._comparison_value = value
 
     def process_element(
             self,
@@ -114,20 +95,11 @@ class FilterMetadata(
             then: ThenFunction[ImageObjectDetectionInstance],
             done: DoneFunction
     ):
-        located_objects = element.annotation
-        if located_objects is not None:
-            self.filter_objects(located_objects)
+        if not hasattr(self, "_comparison"):
+            self._initialize()
 
-        # no annotations left? -> mark as negative
-        if len(located_objects) == 0:
-            element = ImageObjectDetectionInstance(element.key, element.data, None)
-
-        then(element)
-
-    def filter_objects(self, objects: LocatedObjects):
-        to_remove: List[int] = []
-        enumerated: Iterator[Tuple[int, LocatedObject]] = enumerate(objects)
-        for i, lobj in enumerated:
+        to_remove = []
+        for i, lobj in enumerate(element.annotations):
             if self.key not in lobj.metadata:
                 to_remove.append(i)
             else:
@@ -179,6 +151,7 @@ class FilterMetadata(
                             self.logger.error("Invalid comparison type: %s" % self._comparison_str)
                     else:
                         self.logger.error("Unhandled value type: %s" % self.value_type)
+                        then(element)
                         return
                 except:
                     self.logger.error("Failed to compare: %s" % str(value), exc_info=True)
@@ -186,5 +159,11 @@ class FilterMetadata(
 
         # remove objects that didn't meet criteria
         if len(to_remove) > 0:
-            for i in reversed(to_remove):
-                objects.pop(i)
+            to_remove.reverse()
+            for i in to_remove:
+                element.annotations.pop(i)
+            # no annotations left? -> mark as negative
+            if len(element.annotations) == 0:
+                element = ImageObjectDetectionInstance(data=element.data, annotations=None)
+
+        then(element)

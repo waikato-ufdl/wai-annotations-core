@@ -1,22 +1,18 @@
 from wai.common.cli.options import FlagOption
 
 from ....core.component import ProcessorComponent
-from ....core.domain import Annotation, Instance
 from ....core.stream import ThenFunction, DoneFunction
 from ....core.stream.util import RequiresNoFinalisation
-from ....domain.image import Image
+from ....domain.image import ImageInstance
 
 
 class DiscardInvalidImages(
     RequiresNoFinalisation,
-    ProcessorComponent[
-        Instance[Image, Annotation],
-        Instance[Image, Annotation]
-    ]
+    ProcessorComponent[ImageInstance, ImageInstance]
 ):
     """
     Processes a stream of image-based instances, discarding invalid images
-    (e.g. corrupt files or annotations with not file attached).
+    (eg corrupt files or annotations with not file attached).
     """
 
     verbose = FlagOption(
@@ -26,19 +22,21 @@ class DiscardInvalidImages(
 
     def process_element(
             self,
-            element: Instance[Image, Annotation],
-            then: ThenFunction[Instance[Image, Annotation]],
+            element: ImageInstance,
+            then: ThenFunction[ImageInstance],
             done: DoneFunction
     ):
         # no data?
-        if (element.data is None) or (len(element.data.data) == 0):
+        if (element.data.data is None) or (len(element.data.data) == 0):
             if self.verbose:
                 self.logger.info("No image data, skipping!")
             return
 
         # try reading the data
         try:
-            element.data.pil_image
+            img = element.data.pil_image
+            if img is None:
+                return
         except:
             if self.verbose:
                 self.logger.info("Failed to read image data, skipping!")

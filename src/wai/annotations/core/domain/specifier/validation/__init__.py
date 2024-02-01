@@ -1,1 +1,0 @@
-from ._validate_domain_specifier import validate_domain_specifier

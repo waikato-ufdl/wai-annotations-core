@@ -1,23 +1,20 @@
 from ....core.component import ProcessorComponent
-from ....core.domain import Annotation, Data, Instance
+from ....core.domain import Instance
 from ....core.stream import ThenFunction, DoneFunction
 from ....core.stream.util import RequiresNoFinalisation
 
 
 class PassThrough(
     RequiresNoFinalisation,
-    ProcessorComponent[
-        Instance[Data, Annotation],
-        Instance[Data, Annotation]
-    ]
+    ProcessorComponent[Instance, Instance]
 ):
     """
     Inline stream-processor which does nothing to the stream.
     """
     def process_element(
             self,
-            element: Instance[Data, Annotation],
-            then: ThenFunction[Instance[Data, Annotation]],
+            element: Instance,
+            then: ThenFunction[Instance],
             done: DoneFunction
     ):
         then(element)

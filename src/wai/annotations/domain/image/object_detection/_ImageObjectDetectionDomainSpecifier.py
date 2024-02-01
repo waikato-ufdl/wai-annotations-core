@@ -1,6 +1,9 @@
 from typing import Type
 
-from ....core.domain.specifier import DomainSpecifier
+from wai.common.adams.imaging.locateobjects import LocatedObjects
+
+from ....core.domain import DomainSpecifier
+from .._Image import Image
 from ._ImageObjectDetectionInstance import ImageObjectDetectionInstance
 
 DESCRIPTION = """Images containing multiple identified objects.
@@ -11,7 +14,7 @@ an accompanying label, identifying the detected objects within the image.
 """
 
 
-class ImageObjectDetectionDomainSpecifier(DomainSpecifier[ImageObjectDetectionInstance]):
+class ImageObjectDetectionDomainSpecifier(DomainSpecifier[Image, LocatedObjects]):
     """
     Domain specifier for images annotated with objects
     detected within those images.
@@ -23,6 +26,14 @@ class ImageObjectDetectionDomainSpecifier(DomainSpecifier[ImageObjectDetectionIn
     @classmethod
     def description(cls) -> str:
         return DESCRIPTION
+
+    @classmethod
+    def data_type(cls) -> Type[Image]:
+        return Image
+
+    @classmethod
+    def annotations_type(cls) -> Type[LocatedObjects]:
+        return LocatedObjects
 
     @classmethod
     def instance_type(cls) -> Type[ImageObjectDetectionInstance]:

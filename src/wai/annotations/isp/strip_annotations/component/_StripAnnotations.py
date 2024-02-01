@@ -18,8 +18,7 @@ class StripAnnotations(
             done: DoneFunction
     ):
         then(
-            type(element).from_parts(
-                element.key,
+            type(element)(
                 element.data,
                 None
             )

@@ -1,6 +1,8 @@
 from typing import Type
 
-from ....core.domain.specifier import DomainSpecifier
+from ....core.domain import DomainSpecifier
+from .._Image import Image
+from ._ImageSegmentationAnnotation import ImageSegmentationAnnotation
 from ._ImageSegmentationInstance import ImageSegmentationInstance
 
 DESCRIPTION = """Images segmented by category.
@@ -11,7 +13,7 @@ size, where each element is a label.
 """
 
 
-class ImageSegmentationDomainSpecifier(DomainSpecifier[ImageSegmentationInstance]):
+class ImageSegmentationDomainSpecifier(DomainSpecifier[Image, ImageSegmentationAnnotation]):
     """
     Domain specifier for images annotated with a label for each
     pixel in the image.
@@ -23,6 +25,14 @@ class ImageSegmentationDomainSpecifier(DomainSpecifier[ImageSegmentationInstance
     @classmethod
     def description(cls) -> str:
         return DESCRIPTION
+
+    @classmethod
+    def data_type(cls) -> Type[Image]:
+        return Image
+
+    @classmethod
+    def annotations_type(cls) -> Type[ImageSegmentationAnnotation]:
+        return ImageSegmentationAnnotation
 
     @classmethod
     def instance_type(cls) -> Type[ImageSegmentationInstance]:

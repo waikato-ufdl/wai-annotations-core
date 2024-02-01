@@ -3,30 +3,28 @@ from abc import abstractmethod
 from wai.common.adams.imaging.locateobjects import LocatedObject
 
 from ....core.component import ProcessorComponent
-from ....core.domain import Data, Instance
 from ....core.stream import ThenFunction, DoneFunction
 from ....core.stream.util import RequiresNoFinalisation
-from ....domain.image.object_detection import DetectedObjects
+from ....domain.image.object_detection import ImageObjectDetectionDomainSpecifier
+
+ObjectDetectionInstance = ImageObjectDetectionDomainSpecifier.instance_type()
 
 
 class Coercion(
     RequiresNoFinalisation,
-    ProcessorComponent[
-        Instance[Data, DetectedObjects],
-        Instance[Data, DetectedObjects]
-    ]
+    ProcessorComponent[ObjectDetectionInstance, ObjectDetectionInstance]
 ):
     """
     Base class for all coercions.
     """
     def process_element(
             self,
-            element: Instance[Data, DetectedObjects],
-            then: ThenFunction[Instance[Data, DetectedObjects]],
+            element: ObjectDetectionInstance,
+            then: ThenFunction[ObjectDetectionInstance],
             done: DoneFunction
     ):
         # Get the located objects from the instance
-        located_objects = element.annotation
+        image_info, located_objects = element
 
         # Process each located object
         if located_objects is not None:

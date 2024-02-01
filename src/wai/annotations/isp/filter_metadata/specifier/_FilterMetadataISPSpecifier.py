@@ -1,9 +1,8 @@
 from typing import Type, Tuple
 
 from ....core.component import ProcessorComponent
-from ....core.stage.bounds import InstanceTypeBoundRelationship
-from ....core.stage.specifier import ProcessorStageSpecifier
-from ....domain.image.object_detection import ImageObjectDetectionDomainSpecifier, ImageObjectDetectionInstance
+from ....core.domain import DomainSpecifier
+from ....core.specifier import ProcessorStageSpecifier
 
 
 class FilterMetadataISPSpecifier(ProcessorStageSpecifier):
@@ -11,21 +10,24 @@ class FilterMetadataISPSpecifier(ProcessorStageSpecifier):
     Specifies the filter-labels ISP.
     """
     @classmethod
-    def name(cls) -> str:
-        return "Filter Metadata"
-
-    @classmethod
     def description(cls) -> str:
         return "Filters detected objects based on their meta-data."
 
     @classmethod
-    def bound_relationship(cls) -> InstanceTypeBoundRelationship:
-        return InstanceTypeBoundRelationship(
-            ImageObjectDetectionInstance,
-            ImageObjectDetectionInstance
-        )
+    def domain_transfer_function(
+            cls,
+            input_domain: Type[DomainSpecifier]
+    ) -> Type[DomainSpecifier]:
+        from ....domain.image.object_detection import ImageObjectDetectionDomainSpecifier
+        if input_domain is ImageObjectDetectionDomainSpecifier:
+            return ImageObjectDetectionDomainSpecifier
+        else:
+            raise Exception(
+                f"FilterMetadata only handles the "
+                f"{ImageObjectDetectionDomainSpecifier.name()} domain"
+            )
 
     @classmethod
-    def components(cls, bound_relationship: InstanceTypeBoundRelationship) -> Tuple[Type[ProcessorComponent]]:
+    def components(cls) -> Tuple[Type[ProcessorComponent]]:
         from ...filter_metadata.component import FilterMetadata
         return FilterMetadata,

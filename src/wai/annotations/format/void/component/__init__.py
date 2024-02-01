@@ -1,1 +1,1 @@
-from ._ToVoid import ToVoid
+from ._VoidWriter import VoidWriter
